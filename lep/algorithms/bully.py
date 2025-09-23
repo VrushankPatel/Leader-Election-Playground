@@ -23,6 +23,8 @@ class BullyAlgorithm:
         self.heartbeat_interval = 1.0
         self.last_heartbeat = asyncio.get_event_loop().time()
         self.start_time = asyncio.get_event_loop().time()
+        self.election_task = None
+        self.heartbeat_task = None
         self.election_responses = set()
         self.expecting_answers = False
 
@@ -34,8 +36,14 @@ class BullyAlgorithm:
 
     async def start(self):
         logger.info(f"Node {self.node_id} starting Bully algorithm")
-        asyncio.create_task(self.election_timer())
-        asyncio.create_task(self.heartbeat_sender())
+        self.election_task = asyncio.create_task(self.election_timer())
+        self.heartbeat_task = asyncio.create_task(self.heartbeat_sender())
+
+    async def stop(self):
+        if self.election_task:
+            self.election_task.cancel()
+        if self.heartbeat_task:
+            self.heartbeat_task.cancel()
 
     async def election_timer(self):
         while True:

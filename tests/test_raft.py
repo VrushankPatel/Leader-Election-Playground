@@ -36,6 +36,10 @@ async def test_raft_election():
     for algo in algorithms.values():
         assert algo.leader_id == leader_id
 
+    # Stop algorithms
+    for algo in algorithms.values():
+        await algo.stop()
+
 
 @pytest.mark.asyncio
 async def test_raft_heartbeat():
@@ -67,6 +71,10 @@ async def test_raft_heartbeat():
         if node != leader_id:
             assert algo.state.value == "follower"
             assert algo.leader_id == leader_id
+
+    # Stop algorithms
+    for algo in algorithms.values():
+        await algo.stop()
 
 
 @pytest.mark.asyncio
@@ -108,3 +116,7 @@ async def test_raft_leader_failure():
     for node in remaining_nodes:
         if node != new_leader:
             assert algorithms[node].leader_id == new_leader
+
+    # Stop algorithms
+    for algo in algorithms.values():
+        await algo.stop()

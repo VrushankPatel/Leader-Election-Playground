@@ -31,3 +31,7 @@ async def test_bully_election():
             assert status["role"] == "leader"
         else:
             assert status["role"] == "follower"
+
+    # Stop algorithms
+    for algo in algorithms.values():
+        await algo.stop()

@@ -35,6 +35,10 @@ async def test_zab_election():
     for algo in algorithms.values():
         assert algo.leader_id == leader_id
 
+    # Stop algorithms
+    for algo in algorithms.values():
+        await algo.stop()
+
 
 @pytest.mark.asyncio
 async def test_zab_leader_failure():
@@ -75,3 +79,7 @@ async def test_zab_leader_failure():
     for node in remaining_nodes:
         if node != new_leader:
             assert algorithms[node].leader_id == new_leader
+
+    # Stop algorithms to avoid pending tasks
+    for algo in algorithms.values():
+        await algo.stop()

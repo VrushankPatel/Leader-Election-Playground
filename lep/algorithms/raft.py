@@ -28,6 +28,8 @@ class RaftAlgorithm:
         self.heartbeat_interval = 0.5
         self.last_heartbeat = asyncio.get_event_loop().time()
         self.start_time = asyncio.get_event_loop().time()
+        self.election_task = None
+        self.heartbeat_task = None
 
         # Persistence (simulated)
         self.persistent_voted_for = None
@@ -39,8 +41,14 @@ class RaftAlgorithm:
 
     async def start(self):
         logger.info(f"Node {self.node_id} starting Raft algorithm")
-        asyncio.create_task(self.election_timer())
-        asyncio.create_task(self.heartbeat_sender())
+        self.election_task = asyncio.create_task(self.election_timer())
+        self.heartbeat_task = asyncio.create_task(self.heartbeat_sender())
+
+    async def stop(self):
+        if self.election_task:
+            self.election_task.cancel()
+        if self.heartbeat_task:
+            self.heartbeat_task.cancel()
 
     async def election_timer(self):
         while True:

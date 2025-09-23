@@ -27,6 +27,8 @@ class ZabAlgorithm:
         self.heartbeat_interval = 0.5
         self.last_activity = asyncio.get_event_loop().time()
         self.start_time = asyncio.get_event_loop().time()
+        self.election_task = None
+        self.heartbeat_task = None
 
         # Register handlers
         self.transport.register_handler("vote", self.handle_vote)
@@ -36,13 +38,22 @@ class ZabAlgorithm:
 
     async def start(self):
         logger.info(f"Node {self.node_id} starting Zab algorithm")
-        asyncio.create_task(self.election_timer())
-        asyncio.create_task(self.heartbeat_sender())
+        self.election_task = asyncio.create_task(self.election_timer())
+        self.heartbeat_task = asyncio.create_task(self.heartbeat_sender())
+
+    async def stop(self):
+        if self.election_task:
+            self.election_task.cancel()
+        if self.heartbeat_task:
+            self.heartbeat_task.cancel()
 
     async def election_timer(self):
         while True:
             await asyncio.sleep(self.election_timeout)
-            if self.state == ZabState.LOOKING and self.should_start_election():
+            if self.should_start_election():
+                if self.state != ZabState.LOOKING:
+                    self.state = ZabState.LOOKING
+                    self.leader_id = None
                 await self.start_election()
 
     def should_start_election(self) -> bool:
