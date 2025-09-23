@@ -165,6 +165,12 @@ class GRPCTransport(Transport):
             elif isinstance(pb_msg, pb.LeaderAnnounce):
                 response = await stub.AnnounceLeader(pb_msg)
                 return self._pb_to_dict(response)
+            elif isinstance(pb_msg, pb.Coordinator):
+                response = await stub.SendCoordinator(pb_msg)
+                return self._pb_to_dict(response)
+            elif isinstance(pb_msg, pb.Election):
+                response = await stub.SendElection(pb_msg)
+                return self._pb_to_dict(response)
         return None
 
     async def broadcast(self, message) -> Dict[int, Optional[object]]:
@@ -203,6 +209,10 @@ class GRPCTransport(Transport):
             return pb.LeaderAnnounce(
                 leader_id=msg_dict["leader_id"], term=msg_dict.get("term", 0)
             )
+        elif msg_type == "coordinator":
+            return pb.Coordinator(leader=msg_dict["leader"])
+        elif msg_type == "election":
+            return pb.Election()
         return None
 
     def _pb_to_dict(self, pb_msg):
@@ -263,6 +273,21 @@ class LeaderElectionServicer(pb_grpc.LeaderElectionServicer):
             "type": "leader_announce",
             "leader_id": request.leader_id,
             "term": request.term,
+        }
+        response = await self._handle(msg)
+        return pb.VoteResponse(term=response.get("term", 0), vote_granted=True)
+
+    async def SendCoordinator(self, request, context):
+        msg = {
+            "type": "coordinator",
+            "leader": request.leader,
+        }
+        response = await self._handle(msg)
+        return pb.VoteResponse(term=response.get("term", 0), vote_granted=True)
+
+    async def SendElection(self, request, context):
+        msg = {
+            "type": "election",
         }
         response = await self._handle(msg)
         return pb.VoteResponse(term=response.get("term", 0), vote_granted=True)

@@ -3,5 +3,5 @@ algorithm: bully
 cluster_size: 3
 duration: 30
 seed: 42
-transport: grpc
+transport: simulated
 network_conditions: []

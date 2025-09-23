@@ -15,25 +15,35 @@ class LeaderElectionStub(object):
             channel: A grpc.Channel.
         """
         self.RequestVote = channel.unary_unary(
-            "/lep.transport.LeaderElection/RequestVote",
-            request_serializer=messages__pb2.VoteRequest.SerializeToString,
-            response_deserializer=messages__pb2.VoteResponse.FromString,
-        )
+                '/lep.transport.LeaderElection/RequestVote',
+                request_serializer=messages__pb2.VoteRequest.SerializeToString,
+                response_deserializer=messages__pb2.VoteResponse.FromString,
+                )
         self.AppendEntries = channel.unary_unary(
-            "/lep.transport.LeaderElection/AppendEntries",
-            request_serializer=messages__pb2.AppendEntriesRequest.SerializeToString,
-            response_deserializer=messages__pb2.VoteResponse.FromString,
-        )
+                '/lep.transport.LeaderElection/AppendEntries',
+                request_serializer=messages__pb2.AppendEntriesRequest.SerializeToString,
+                response_deserializer=messages__pb2.VoteResponse.FromString,
+                )
         self.SendHeartbeat = channel.unary_unary(
-            "/lep.transport.LeaderElection/SendHeartbeat",
-            request_serializer=messages__pb2.Heartbeat.SerializeToString,
-            response_deserializer=messages__pb2.VoteResponse.FromString,
-        )
+                '/lep.transport.LeaderElection/SendHeartbeat',
+                request_serializer=messages__pb2.Heartbeat.SerializeToString,
+                response_deserializer=messages__pb2.VoteResponse.FromString,
+                )
         self.AnnounceLeader = channel.unary_unary(
-            "/lep.transport.LeaderElection/AnnounceLeader",
-            request_serializer=messages__pb2.LeaderAnnounce.SerializeToString,
-            response_deserializer=messages__pb2.VoteResponse.FromString,
-        )
+                '/lep.transport.LeaderElection/AnnounceLeader',
+                request_serializer=messages__pb2.LeaderAnnounce.SerializeToString,
+                response_deserializer=messages__pb2.VoteResponse.FromString,
+                )
+        self.SendCoordinator = channel.unary_unary(
+                '/lep.transport.LeaderElection/SendCoordinator',
+                request_serializer=messages__pb2.Coordinator.SerializeToString,
+                response_deserializer=messages__pb2.VoteResponse.FromString,
+                )
+        self.SendElection = channel.unary_unary(
+                '/lep.transport.LeaderElection/SendElection',
+                request_serializer=messages__pb2.Election.SerializeToString,
+                response_deserializer=messages__pb2.VoteResponse.FromString,
+                )
 
 
 class LeaderElectionServicer(object):
@@ -42,173 +52,181 @@ class LeaderElectionServicer(object):
     def RequestVote(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def AppendEntries(self, request, context):
-        """Reuse VoteResponse for simplicity"""
+        """Reuse VoteResponse for simplicity
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def SendHeartbeat(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def AnnounceLeader(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SendCoordinator(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SendElection(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_LeaderElectionServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "RequestVote": grpc.unary_unary_rpc_method_handler(
-            servicer.RequestVote,
-            request_deserializer=messages__pb2.VoteRequest.FromString,
-            response_serializer=messages__pb2.VoteResponse.SerializeToString,
-        ),
-        "AppendEntries": grpc.unary_unary_rpc_method_handler(
-            servicer.AppendEntries,
-            request_deserializer=messages__pb2.AppendEntriesRequest.FromString,
-            response_serializer=messages__pb2.VoteResponse.SerializeToString,
-        ),
-        "SendHeartbeat": grpc.unary_unary_rpc_method_handler(
-            servicer.SendHeartbeat,
-            request_deserializer=messages__pb2.Heartbeat.FromString,
-            response_serializer=messages__pb2.VoteResponse.SerializeToString,
-        ),
-        "AnnounceLeader": grpc.unary_unary_rpc_method_handler(
-            servicer.AnnounceLeader,
-            request_deserializer=messages__pb2.LeaderAnnounce.FromString,
-            response_serializer=messages__pb2.VoteResponse.SerializeToString,
-        ),
+            'RequestVote': grpc.unary_unary_rpc_method_handler(
+                    servicer.RequestVote,
+                    request_deserializer=messages__pb2.VoteRequest.FromString,
+                    response_serializer=messages__pb2.VoteResponse.SerializeToString,
+            ),
+            'AppendEntries': grpc.unary_unary_rpc_method_handler(
+                    servicer.AppendEntries,
+                    request_deserializer=messages__pb2.AppendEntriesRequest.FromString,
+                    response_serializer=messages__pb2.VoteResponse.SerializeToString,
+            ),
+            'SendHeartbeat': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendHeartbeat,
+                    request_deserializer=messages__pb2.Heartbeat.FromString,
+                    response_serializer=messages__pb2.VoteResponse.SerializeToString,
+            ),
+            'AnnounceLeader': grpc.unary_unary_rpc_method_handler(
+                    servicer.AnnounceLeader,
+                    request_deserializer=messages__pb2.LeaderAnnounce.FromString,
+                    response_serializer=messages__pb2.VoteResponse.SerializeToString,
+            ),
+            'SendCoordinator': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendCoordinator,
+                    request_deserializer=messages__pb2.Coordinator.FromString,
+                    response_serializer=messages__pb2.VoteResponse.SerializeToString,
+            ),
+            'SendElection': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendElection,
+                    request_deserializer=messages__pb2.Election.FromString,
+                    response_serializer=messages__pb2.VoteResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "lep.transport.LeaderElection", rpc_method_handlers
-    )
+            'lep.transport.LeaderElection', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
-# This class is part of an EXPERIMENTAL API.
+ # This class is part of an EXPERIMENTAL API.
 class LeaderElection(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def RequestVote(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def RequestVote(request,
             target,
-            "/lep.transport.LeaderElection/RequestVote",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/lep.transport.LeaderElection/RequestVote',
             messages__pb2.VoteRequest.SerializeToString,
             messages__pb2.VoteResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def AppendEntries(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def AppendEntries(request,
             target,
-            "/lep.transport.LeaderElection/AppendEntries",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/lep.transport.LeaderElection/AppendEntries',
             messages__pb2.AppendEntriesRequest.SerializeToString,
             messages__pb2.VoteResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def SendHeartbeat(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def SendHeartbeat(request,
             target,
-            "/lep.transport.LeaderElection/SendHeartbeat",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/lep.transport.LeaderElection/SendHeartbeat',
             messages__pb2.Heartbeat.SerializeToString,
             messages__pb2.VoteResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def AnnounceLeader(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def AnnounceLeader(request,
             target,
-            "/lep.transport.LeaderElection/AnnounceLeader",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/lep.transport.LeaderElection/AnnounceLeader',
             messages__pb2.LeaderAnnounce.SerializeToString,
             messages__pb2.VoteResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SendCoordinator(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/lep.transport.LeaderElection/SendCoordinator',
+            messages__pb2.Coordinator.SerializeToString,
+            messages__pb2.VoteResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SendElection(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/lep.transport.LeaderElection/SendElection',
+            messages__pb2.Election.SerializeToString,
+            messages__pb2.VoteResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

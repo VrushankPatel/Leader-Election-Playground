@@ -33,6 +33,13 @@ message LeaderAnnounce {
   int32 term = 2;
 }
 
+message Coordinator {
+  int32 leader = 1;
+}
+
+message Election {
+}
+
 message ControlMessage {
   enum Action {
     START = 0;
@@ -51,4 +58,6 @@ service LeaderElection {
   rpc AppendEntries(AppendEntriesRequest) returns (VoteResponse);  // Reuse VoteResponse for simplicity
   rpc SendHeartbeat(Heartbeat) returns (VoteResponse);
   rpc AnnounceLeader(LeaderAnnounce) returns (VoteResponse);
+  rpc SendCoordinator(Coordinator) returns (VoteResponse);
+  rpc SendElection(Election) returns (VoteResponse);
 }

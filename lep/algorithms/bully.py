@@ -114,7 +114,7 @@ class BullyAlgorithm:
         while True:
             if self.state == BullyState.LEADER:
                 await self.transport.broadcast(
-                    {"type": "heartbeat", "leader": self.node_id}
+                    {"type": "heartbeat", "leader_id": self.node_id}
                 )
             await asyncio.sleep(self.heartbeat_interval)
 
