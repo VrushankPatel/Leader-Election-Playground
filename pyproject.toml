@@ -1,5 +1,9 @@
 [tool.black]
 line-length = 79
+exclude = "lep/transport/proto/"
+
+[tool.isort]
+skip = ["lep/transport/proto/"]
 
 [tool.flake8]
 max-line-length = 79
