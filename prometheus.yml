@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'lep'
+    static_configs:
+      - targets: ['lep:8081', 'lep:8082', 'lep:8083']  # Adjust ports as needed
