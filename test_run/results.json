@@ -2,28 +2,28 @@
   "scenario": "normal_election",
   "algorithm": "bully",
   "cluster_size": 3,
-  "duration": 32.00352144241333,
+  "duration": 32.00348114967346,
   "nodes": {
     "1": {
       "node_id": 1,
       "role": "follower",
       "leader_id": 3,
       "term": 0,
-      "uptime": 32.05274377801106
+      "uptime": 32.003477983991615
     },
     "2": {
       "node_id": 2,
       "role": "follower",
       "leader_id": 3,
       "term": 0,
-      "uptime": 30.051286017987877
+      "uptime": 30.002017851016717
     },
     "3": {
       "node_id": 3,
       "role": "leader",
       "leader_id": 3,
       "term": 0,
-      "uptime": 30.051227721007308
+      "uptime": 30.001940850022947
     }
   },
   "leaders": [
