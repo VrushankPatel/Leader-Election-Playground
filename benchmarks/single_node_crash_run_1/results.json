@@ -2,42 +2,42 @@
   "scenario": "single_node_crash",
   "algorithm": "bully",
   "cluster_size": 5,
-  "duration": 10.00200366973877,
+  "duration": 10.000970840454102,
   "nodes": {
     "1": {
       "node_id": 1,
       "role": "leader",
       "leader_id": 1,
       "term": 0,
-      "uptime": 10.001995525992243
+      "uptime": 10.000962777994573
     },
     "2": {
       "node_id": 2,
       "role": "follower",
       "leader_id": 5,
       "term": 0,
-      "uptime": 10.001952039980097
+      "uptime": 10.000912400981179
     },
     "3": {
       "node_id": 3,
       "role": "follower",
       "leader_id": 5,
       "term": 0,
-      "uptime": 10.001931881008204
+      "uptime": 10.00089210999431
     },
     "4": {
       "node_id": 4,
       "role": "follower",
       "leader_id": 5,
       "term": 0,
-      "uptime": 10.00191324899788
+      "uptime": 10.000875959987752
     },
     "5": {
       "node_id": 5,
       "role": "leader",
       "leader_id": 5,
       "term": 0,
-      "uptime": 10.001895658002468
+      "uptime": 10.000860269996338
     }
   },
   "leaders": [

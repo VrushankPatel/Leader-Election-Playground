@@ -20,10 +20,12 @@ logger = logging.getLogger(__name__)
 
 
 class Orchestrator:
-    def __init__(self, scenario_file: str, output_dir: str = "results"):
+    def __init__(self, scenario_file: str, output_dir: str = "results", seed: int = None):
         self.scenario_file = scenario_file
         self.output_dir = output_dir
         self.scenario = self.load_scenario()
+        if seed is not None:
+            self.scenario["seed"] = seed
         self.network_controller = NetworkController(
             seed=self.scenario.get("seed", 42)
         )

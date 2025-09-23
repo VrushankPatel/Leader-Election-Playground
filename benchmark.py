@@ -20,7 +20,7 @@ async def run_benchmark(scenarios: List[str], runs: int = 5, output_dir: str = "
         for run in range(runs):
             print(f"Running {scenario_name} run {run + 1}/{runs}")
             run_output = f"{output_dir}/{scenario_name}_run_{run}"
-            orch = Orchestrator(scenario_file, run_output)
+            orch = Orchestrator(scenario_file, run_output, seed=42 + run)
             await orch.run_scenario()
             with open(f"{run_output}/results.json", 'r') as f:
                 result = json.load(f)
@@ -55,9 +55,10 @@ def aggregate_results(results: Dict) -> Dict:
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) < 2:
-        print("Usage: python benchmark.py scenario1.yaml scenario2.yaml ...")
-        sys.exit(1)
-    scenarios = sys.argv[1:]
-    asyncio.run(run_benchmark(scenarios))
+    import argparse
+    parser = argparse.ArgumentParser(description="Run leader election benchmarks")
+    parser.add_argument("scenarios", nargs="+", help="Scenario YAML files")
+    parser.add_argument("--runs", type=int, default=5, help="Number of runs per scenario")
+    parser.add_argument("--output-dir", default="benchmarks", help="Output directory")
+    args = parser.parse_args()
+    asyncio.run(run_benchmark(args.scenarios, runs=args.runs, output_dir=args.output_dir))
