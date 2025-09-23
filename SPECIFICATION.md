@@ -267,5 +267,3 @@ Completed:
 - Advanced metrics collection and analysis
 
 Pending:
-- Test GRPC transport in real network scenarios (GRPC transport implemented, can be tested with docker-compose by changing transport)
-- Deploy Grafana dashboard with Prometheus for full metrics visualization (Added to docker-compose, with provisioning)

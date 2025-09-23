@@ -2,7 +2,7 @@ import asyncio
 import json
 import logging
 import time
-from typing import Dict, List
+from typing import Dict, List, cast
 
 import yaml
 
@@ -10,7 +10,7 @@ from ..algorithms.bully import BullyAlgorithm
 from ..algorithms.raft import RaftAlgorithm
 from ..algorithms.zab import ZabAlgorithm
 from ..network.controller import NetworkController
-from ..transport.transport import SimulatedTransport, MessageDispatcher
+from ..transport.transport import SimulatedTransport, GRPCTransport, MessageDispatcher
 
 logger = logging.getLogger(__name__)
 
@@ -33,28 +33,44 @@ class Orchestrator:
         self.start_time = time.time()
         cluster_size = self.scenario["cluster_size"]
         algorithm = self.scenario["algorithm"]
+        transport_type = self.scenario.get("transport", "simulated")
         all_nodes = list(range(1, cluster_size + 1))
 
-        # Create message dispatcher
-        dispatcher = MessageDispatcher()
-
         # Start nodes
-        for node_id in all_nodes:
-            transport = SimulatedTransport(node_id, all_nodes, self.network_controller, dispatcher)
-            dispatcher.register_transport(node_id, transport)
-            if algorithm == "bully":
-                algo = BullyAlgorithm(node_id, all_nodes, transport)
-            elif algorithm == "raft":
-                algo = RaftAlgorithm(node_id, all_nodes, transport)
-            elif algorithm == "zab":
-                algo = ZabAlgorithm(node_id, all_nodes, transport)
-            else:
-                raise ValueError(f"Unknown algorithm: {algorithm}")
-            self.nodes[node_id] = algo
-            await algo.start()
+        if transport_type == "simulated":
+            dispatcher = MessageDispatcher()
+            for node_id in all_nodes:
+                transport = SimulatedTransport(node_id, all_nodes, self.network_controller, dispatcher)
+                dispatcher.register_transport(node_id, transport)
+                if algorithm == "bully":
+                    algo = BullyAlgorithm(node_id, all_nodes, transport)
+                elif algorithm == "raft":
+                    algo = RaftAlgorithm(node_id, all_nodes, transport)
+                elif algorithm == "zab":
+                    algo = ZabAlgorithm(node_id, all_nodes, transport)
+                else:
+                    raise ValueError(f"Unknown algorithm: {algorithm}")
+                self.nodes[node_id] = algo
+                await algo.start()
+        else:  # grpc
+            for node_id in all_nodes:
+                node_ports = {nid: 50050 + nid for nid in all_nodes}
+                transport = GRPCTransport(node_id, "localhost", node_ports[node_id], all_nodes, node_ports)
+                await transport.start_server()
+                if algorithm == "bully":
+                    algo = BullyAlgorithm(node_id, all_nodes, transport)
+                elif algorithm == "raft":
+                    algo = RaftAlgorithm(node_id, all_nodes, transport)
+                elif algorithm == "zab":
+                    algo = ZabAlgorithm(node_id, all_nodes, transport)
+                else:
+                    raise ValueError(f"Unknown algorithm: {algorithm}")
+                self.nodes[node_id] = algo
+                await algo.start()
 
-        # Apply network conditions
-        self.apply_network_conditions()
+        # Apply network conditions only for simulated transport
+        if transport_type == "simulated":
+            self.apply_network_conditions()
 
         # Run for duration
         duration = self.scenario.get("duration", 30)
