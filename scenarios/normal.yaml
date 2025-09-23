@@ -1,0 +1,6 @@
+name: normal_election
+algorithm: bully
+cluster_size: 3
+duration: 30
+seed: 42
+network_conditions: []
