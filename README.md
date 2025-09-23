@@ -18,7 +18,7 @@ This project provides working implementations of three leader-election algorithm
 
 1. Clone the repository
 2. Install dependencies: `pip install -r requirements.txt`
-3. Run a scenario: `python -m lep.orchestrator run-scenario --file=scenarios/normal.yaml`
+3. Run a scenario: `python run_scenario.py scenarios/normal.yaml`
 
 ## Architecture
 
