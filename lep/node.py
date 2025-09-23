@@ -103,6 +103,12 @@ class Node:
             )
         return web.Response(text="Metrics not available", status=503)
 
+    async def stop(self):
+        await self.algo.stop()
+
+    async def restart(self):
+        await self.algo.restart()
+
     async def update_metrics(self):
         while True:
             await asyncio.sleep(5)  # Update every 5 seconds

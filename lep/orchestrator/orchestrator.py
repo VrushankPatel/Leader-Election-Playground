@@ -11,6 +11,7 @@ from ..algorithms.raft import RaftAlgorithm
 from ..algorithms.zab import ZabAlgorithm
 from ..network.controller import NetworkController
 from ..transport.transport import GRPCTransport, MessageDispatcher, SimulatedTransport
+from ..node import Node
 
 logger = logging.getLogger(__name__)
 
@@ -46,20 +47,9 @@ class Orchestrator:
         if transport_type == "simulated":
             dispatcher = MessageDispatcher(start_monotonic=self.start_monotonic)
             for node_id in all_nodes:
-                transport = SimulatedTransport(
-                    node_id, all_nodes, self.network_controller, dispatcher
-                )
-                dispatcher.register_transport(node_id, transport)
-                if algorithm == "bully":
-                    algo = BullyAlgorithm(node_id, all_nodes, transport)
-                elif algorithm == "raft":
-                    algo = RaftAlgorithm(node_id, all_nodes, transport)
-                elif algorithm == "zab":
-                    algo = ZabAlgorithm(node_id, all_nodes, transport)
-                else:
-                    raise ValueError(f"Unknown algorithm: {algorithm}")
-                self.nodes[node_id] = algo
-                await algo.start()
+                node = Node(node_id, all_nodes, algorithm, message_dispatcher=dispatcher)
+                self.nodes[node_id] = node
+                await node.start()
         else:  # grpc
             for node_id in all_nodes:
                 node_ports = {nid: 50050 + nid for nid in all_nodes}
@@ -126,20 +116,9 @@ class Orchestrator:
         # Start nodes in simulated mode without network conditions
         dispatcher = MessageDispatcher()
         for node_id in all_nodes:
-            transport = SimulatedTransport(
-                node_id, all_nodes, self.network_controller, dispatcher
-            )
-            dispatcher.register_transport(node_id, transport)
-            if algorithm == "bully":
-                algo = BullyAlgorithm(node_id, all_nodes, transport)
-            elif algorithm == "raft":
-                algo = RaftAlgorithm(node_id, all_nodes, transport)
-            elif algorithm == "zab":
-                algo = ZabAlgorithm(node_id, all_nodes, transport)
-            else:
-                raise ValueError(f"Unknown algorithm: {algorithm}")
-            self.nodes[node_id] = algo
-            await algo.start()
+            node = Node(node_id, all_nodes, algorithm, message_dispatcher=dispatcher)
+            self.nodes[node_id] = node
+            await node.start()
 
         if logs:
             # Replay messages
@@ -199,8 +178,8 @@ class Orchestrator:
             "nodes": {},
         }
         leaders = []
-        for node_id, algo in self.nodes.items():
-            status = algo.get_status()
+        for node_id, node in self.nodes.items():
+            status = node.algo.get_status()
             metrics["nodes"][node_id] = status
             if status["role"] == "leader":
                 leaders.append(node_id)
