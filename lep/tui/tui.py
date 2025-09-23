@@ -18,9 +18,7 @@ class TUI:
         port = self.ports[node_id]
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    f"http://localhost:{port}/status"
-                ) as resp:
+                async with session.get(f"http://localhost:{port}/status") as resp:
                     return await resp.json()
         except Exception:
             return {

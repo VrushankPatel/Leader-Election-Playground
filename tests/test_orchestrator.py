@@ -17,9 +17,7 @@ async def test_orchestrator_load_scenario():
         "duration": 1,
         "seed": 42,
     }
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".yaml", delete=False
-    ) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
         yaml.dump(scenario_data, f)
         scenario_file = f.name
 
@@ -39,9 +37,7 @@ async def test_orchestrator_run_scenario():
         "duration": 0.5,
         "seed": 42,
     }
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".yaml", delete=False
-    ) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
         yaml.dump(scenario_data, f)
         scenario_file = f.name
 
@@ -67,9 +63,7 @@ def test_orchestrator_collect_metrics():
         "algorithm": "bully",
         "cluster_size": 3,
     }
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".yaml", delete=False
-    ) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
         yaml.dump(scenario_data, f)
         scenario_file = f.name
 
@@ -99,9 +93,7 @@ async def test_orchestrator_replay_scenario():
         "duration": 2.0,
         "seed": 42,
     }
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".yaml", delete=False
-    ) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
         yaml.dump(scenario_data, f)
         scenario_file = f.name
 
@@ -121,9 +113,7 @@ async def test_orchestrator_replay_scenario():
             await orch_replay.replay_scenario(log_file)
 
             # Check replay results
-            replay_results_file = os.path.join(
-                replay_output_dir, "results.json"
-            )
+            replay_results_file = os.path.join(replay_output_dir, "results.json")
             assert os.path.exists(replay_results_file)
             with open(replay_results_file, "r") as f:
                 replay_metrics = json.load(f)

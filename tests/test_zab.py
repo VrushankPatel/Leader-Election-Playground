@@ -20,9 +20,7 @@ async def test_zab_election():
             node_id, all_nodes, network, dispatcher
         )
         dispatcher.register_transport(node_id, transports[node_id])
-        algorithms[node_id] = ZabAlgorithm(
-            node_id, all_nodes, transports[node_id]
-        )
+        algorithms[node_id] = ZabAlgorithm(node_id, all_nodes, transports[node_id])
 
     # Start all algorithms
     for algo in algorithms.values():
@@ -33,9 +31,7 @@ async def test_zab_election():
 
     # Check that exactly one leader is elected
     leaders = [
-        node
-        for node, algo in algorithms.items()
-        if algo.state.value == "leader"
+        node for node, algo in algorithms.items() if algo.state.value == "leader"
     ]
     assert len(leaders) == 1
 
@@ -62,9 +58,7 @@ async def test_zab_leader_failure():
             node_id, all_nodes, network, dispatcher
         )
         dispatcher.register_transport(node_id, transports[node_id])
-        algorithms[node_id] = ZabAlgorithm(
-            node_id, all_nodes, transports[node_id]
-        )
+        algorithms[node_id] = ZabAlgorithm(node_id, all_nodes, transports[node_id])
 
     # Start all
     for algo in algorithms.values():
@@ -74,9 +68,7 @@ async def test_zab_leader_failure():
 
     # Find initial leader
     initial_leader = next(
-        node
-        for node, algo in algorithms.items()
-        if algo.state.value == "leader"
+        node for node, algo in algorithms.items() if algo.state.value == "leader"
     )
 
     # Simulate leader failure by partitioning it
@@ -90,9 +82,7 @@ async def test_zab_leader_failure():
     # Check new leader elected among remaining
     remaining_nodes = [n for n in all_nodes if n != initial_leader]
     leaders = [
-        node
-        for node in remaining_nodes
-        if algorithms[node].state.value == "leader"
+        node for node in remaining_nodes if algorithms[node].state.value == "leader"
     ]
     assert len(leaders) == 1
 

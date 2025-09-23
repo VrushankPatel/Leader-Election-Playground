@@ -15,9 +15,7 @@ class ZabState(Enum):
 
 
 class ZabAlgorithm:
-    def __init__(
-        self, node_id: int, all_nodes: List[int], transport: Transport
-    ):
+    def __init__(self, node_id: int, all_nodes: List[int], transport: Transport):
         self.node_id = node_id
         self.all_nodes = sorted(all_nodes)
         self.transport = transport
@@ -82,9 +80,7 @@ class ZabAlgorithm:
         self.voted_for = self.node_id
         self.votes_received = {self.node_id}
         self.acks_received = set()
-        logger.info(
-            f"Node {self.node_id} starting election for epoch {self.epoch}"
-        )
+        logger.info(f"Node {self.node_id} starting election for epoch {self.epoch}")
 
         # Send vote to all
         vote_msg = {
@@ -107,9 +103,7 @@ class ZabAlgorithm:
     async def become_leader(self):
         self.state = ZabState.LEADER
         self.leader_id = self.node_id
-        logger.info(
-            f"Node {self.node_id} became leader for epoch {self.epoch}"
-        )
+        logger.info(f"Node {self.node_id} became leader for epoch {self.epoch}")
         # Send leader message
         leader_msg = {
             "type": "leader",
@@ -153,10 +147,7 @@ class ZabAlgorithm:
         voter = message["voter"]
         self.acks_received.add(voter)
         majority = len(self.all_nodes) // 2 + 1
-        if (
-            len(self.acks_received) >= majority
-            and self.state == ZabState.LOOKING
-        ):
+        if len(self.acks_received) >= majority and self.state == ZabState.LOOKING:
             await self.become_leader()
 
     async def handle_leader(self, message):
@@ -166,9 +157,7 @@ class ZabAlgorithm:
             self.epoch = epoch
             self.leader_id = leader
             self.state = (
-                ZabState.FOLLOWING
-                if leader != self.node_id
-                else ZabState.LEADER
+                ZabState.FOLLOWING if leader != self.node_id else ZabState.LEADER
             )
             self.last_activity = asyncio.get_event_loop().time()
             logger.info(f"Node {self.node_id} following leader {leader}")

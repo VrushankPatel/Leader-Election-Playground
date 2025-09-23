@@ -45,15 +45,9 @@ class RaftAlgorithm:
         self.voted_for_file = f"node_{node_id}_voted_for.json"
 
         # Register handlers
-        self.transport.register_handler(
-            "request_vote", self.handle_request_vote
-        )
-        self.transport.register_handler(
-            "vote_response", self.handle_vote_response
-        )
-        self.transport.register_handler(
-            "append_entries", self.handle_append_entries
-        )
+        self.transport.register_handler("request_vote", self.handle_request_vote)
+        self.transport.register_handler("vote_response", self.handle_vote_response)
+        self.transport.register_handler("append_entries", self.handle_append_entries)
 
     def load_persistent_state(self):
         if os.path.exists(self.voted_for_file):
@@ -112,8 +106,7 @@ class RaftAlgorithm:
         self.votes_received = 1  # vote for self
         self.save_persistent_state()
         logger.info(
-            f"Node {self.node_id} starting election for term "
-            f"{self.current_term}"
+            f"Node {self.node_id} starting election for term " f"{self.current_term}"
         )
 
         # Request votes from all
@@ -137,9 +130,7 @@ class RaftAlgorithm:
     async def become_leader(self):
         self.state = RaftState.LEADER
         self.leader_id = self.node_id
-        logger.info(
-            f"Node {self.node_id} became leader for term {self.current_term}"
-        )
+        logger.info(f"Node {self.node_id} became leader for term {self.current_term}")
         # Send initial heartbeat
         await self.send_heartbeat()
 

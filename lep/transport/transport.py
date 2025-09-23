@@ -37,9 +37,7 @@ class MessageDispatcher:
         }
         self.logs.append(log_entry)
         if to_node in self.transports:
-            return await self.transports[to_node].receive_message(
-                from_node, message
-            )
+            return await self.transports[to_node].receive_message(from_node, message)
 
     def save_logs(self, filename: str):
         with open(filename, "w") as f:
@@ -120,9 +118,7 @@ class GRPCTransport(Transport):
         node_ports: Dict[int, int],
     ):
         if pb is None or pb_grpc is None:
-            raise ImportError(
-                "gRPC protobuf modules not generated. Run protoc first."
-            )
+            raise ImportError("gRPC protobuf modules not generated. Run protoc first.")
         self.node_id = node_id
         self.host = host
         self.port = port

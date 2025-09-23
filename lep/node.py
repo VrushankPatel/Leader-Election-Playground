@@ -48,9 +48,7 @@ class Node:
             self.leader_gauge = Gauge(
                 "leader_election_leader", "Current leader ID", ["node_id"]
             )
-            self.term_gauge = Gauge(
-                "leader_election_term", "Current term", ["node_id"]
-            )
+            self.term_gauge = Gauge("leader_election_term", "Current term", ["node_id"])
             self.election_counter = Counter(
                 "leader_election_count",
                 "Number of elections started",
@@ -98,9 +96,7 @@ class Node:
             self.leader_gauge.labels(node_id=self.node_id).set(
                 status.get("leader_id", 0) or 0
             )
-            self.term_gauge.labels(node_id=self.node_id).set(
-                status.get("term", 0)
-            )
+            self.term_gauge.labels(node_id=self.node_id).set(status.get("term", 0))
             return web.Response(
                 text=generate_latest(),
                 content_type="text/plain; charset=utf-8",

@@ -20,9 +20,7 @@ async def test_bully_election():
             node_id, all_nodes, network, dispatcher
         )
         dispatcher.register_transport(node_id, transports[node_id])
-        algorithms[node_id] = BullyAlgorithm(
-            node_id, all_nodes, transports[node_id]
-        )
+        algorithms[node_id] = BullyAlgorithm(node_id, all_nodes, transports[node_id])
 
     # Start all algorithms
     for algo in algorithms.values():

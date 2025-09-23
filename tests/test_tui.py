@@ -42,8 +42,6 @@ async def test_tui_fetch_status():
 @pytest.mark.asyncio
 async def test_tui_fetch_status_error():
     tui = TUI([1], {1: 8081})
-    with patch(
-        "aiohttp.ClientSession", side_effect=Exception("Connection error")
-    ):
+    with patch("aiohttp.ClientSession", side_effect=Exception("Connection error")):
         status = await tui.fetch_status(1)
         assert status["role"] == "unknown"

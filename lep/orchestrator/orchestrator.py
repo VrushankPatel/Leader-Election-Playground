@@ -10,8 +10,7 @@ from ..algorithms.bully import BullyAlgorithm
 from ..algorithms.raft import RaftAlgorithm
 from ..algorithms.zab import ZabAlgorithm
 from ..network.controller import NetworkController
-from ..transport.transport import (GRPCTransport, MessageDispatcher,
-                                   SimulatedTransport)
+from ..transport.transport import GRPCTransport, MessageDispatcher, SimulatedTransport
 
 logger = logging.getLogger(__name__)
 
@@ -25,9 +24,7 @@ class Orchestrator:
         self.scenario = self.load_scenario()
         if seed is not None:
             self.scenario["seed"] = seed
-        self.network_controller = NetworkController(
-            seed=self.scenario.get("seed", 42)
-        )
+        self.network_controller = NetworkController(seed=self.scenario.get("seed", 42))
         self.nodes = {}
         self.start_time = None
         self.start_monotonic = None
@@ -47,9 +44,7 @@ class Orchestrator:
 
         # Start nodes
         if transport_type == "simulated":
-            dispatcher = MessageDispatcher(
-                start_monotonic=self.start_monotonic
-            )
+            dispatcher = MessageDispatcher(start_monotonic=self.start_monotonic)
             for node_id in all_nodes:
                 transport = SimulatedTransport(
                     node_id, all_nodes, self.network_controller, dispatcher
@@ -226,10 +221,7 @@ async def main():
     import sys
 
     if len(sys.argv) < 2:
-        print(
-            "Usage: python -m lep.orchestrator run-scenario "
-            "--file=scenario.yaml"
-        )
+        print("Usage: python -m lep.orchestrator run-scenario " "--file=scenario.yaml")
         return
     scenario_file = sys.argv[2].split("=")[1]
     orch = Orchestrator(scenario_file)
