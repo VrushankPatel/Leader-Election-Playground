@@ -1,0 +1,47 @@
+{
+  "scenario": "packet_loss",
+  "algorithm": "bully",
+  "cluster_size": 5,
+  "duration": 10.007085800170898,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "follower",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.007081679010298
+    },
+    "2": {
+      "node_id": 2,
+      "role": "follower",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.007040610013064
+    },
+    "3": {
+      "node_id": 3,
+      "role": "follower",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.007023957994534
+    },
+    "4": {
+      "node_id": 4,
+      "role": "follower",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.00700834899908
+    },
+    "5": {
+      "node_id": 5,
+      "role": "leader",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.006993453018367
+    }
+  },
+  "leaders": [
+    5
+  ],
+  "safety_violations": false
+}

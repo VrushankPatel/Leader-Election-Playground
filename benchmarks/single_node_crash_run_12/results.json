@@ -1,0 +1,48 @@
+{
+  "scenario": "single_node_crash",
+  "algorithm": "bully",
+  "cluster_size": 5,
+  "duration": 10.001141786575317,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "leader",
+      "leader_id": 1,
+      "term": 0,
+      "uptime": 10.001137769024353
+    },
+    "2": {
+      "node_id": 2,
+      "role": "follower",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.001072344981367
+    },
+    "3": {
+      "node_id": 3,
+      "role": "follower",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.001053146988852
+    },
+    "4": {
+      "node_id": 4,
+      "role": "follower",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.001036984001985
+    },
+    "5": {
+      "node_id": 5,
+      "role": "leader",
+      "leader_id": 5,
+      "term": 0,
+      "uptime": 10.00101297799847
+    }
+  },
+  "leaders": [
+    1,
+    5
+  ],
+  "safety_violations": true
+}

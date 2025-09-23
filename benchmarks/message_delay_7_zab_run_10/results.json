@@ -1,0 +1,61 @@
+{
+  "scenario": "message_delay_7_zab",
+  "algorithm": "zab",
+  "cluster_size": 7,
+  "duration": 10.001265525817871,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "following",
+      "leader_id": 6,
+      "term": 9,
+      "uptime": 10.001259930984816
+    },
+    "2": {
+      "node_id": 2,
+      "role": "following",
+      "leader_id": 6,
+      "term": 9,
+      "uptime": 10.001220592996106
+    },
+    "3": {
+      "node_id": 3,
+      "role": "following",
+      "leader_id": 6,
+      "term": 9,
+      "uptime": 10.00119948000065
+    },
+    "4": {
+      "node_id": 4,
+      "role": "following",
+      "leader_id": 6,
+      "term": 9,
+      "uptime": 10.001184380002087
+    },
+    "5": {
+      "node_id": 5,
+      "role": "following",
+      "leader_id": 6,
+      "term": 9,
+      "uptime": 10.001169238996226
+    },
+    "6": {
+      "node_id": 6,
+      "role": "leader",
+      "leader_id": 6,
+      "term": 9,
+      "uptime": 10.001155052974354
+    },
+    "7": {
+      "node_id": 7,
+      "role": "following",
+      "leader_id": 6,
+      "term": 9,
+      "uptime": 10.00114259799011
+    }
+  },
+  "leaders": [
+    6
+  ],
+  "safety_violations": false
+}
