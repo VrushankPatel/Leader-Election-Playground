@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leader Election Playground</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .node { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; }
+        .leader { background-color: #e6f7ff; }
+        .follower { background-color: #f6ffed; }
+        .candidate { background-color: #fff7e6; }
+    </style>
+</head>
+<body>
+    <h1>Leader Election Playground</h1>
+    <div id="cluster"></div>
+    <script>
+        async function fetchStatus(nodeId) {
+            try {
+                const response = await fetch(`http://localhost:${8080 + nodeId}/status`);
+                return await response.json();
+            } catch (e) {
+                return { error: 'Node not available' };
+            }
+        }
+
+        async function updateCluster() {
+            const clusterDiv = document.getElementById('cluster');
+            clusterDiv.innerHTML = '';
+            // Assume 3 nodes for demo, adjust as needed
+            for (let i = 1; i <= 3; i++) {
+                const status = await fetchStatus(i);
+                const nodeDiv = document.createElement('div');
+                nodeDiv.className = 'node ' + (status.role || 'unknown');
+                nodeDiv.innerHTML = `
+                    <h3>Node ${i}</h3>
+                    <p>Role: ${status.role || 'Unknown'}</p>
+                    <p>Leader: ${status.leader_id || 'None'}</p>
+                    <p>Term: ${status.term || 'N/A'}</p>
+                `;
+                clusterDiv.appendChild(nodeDiv);
+            }
+        }
+
+        setInterval(updateCluster, 1000);
+        updateCluster();
+    </script>
+</body>
+</html>
