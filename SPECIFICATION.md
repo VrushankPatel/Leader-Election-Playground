@@ -258,12 +258,12 @@ Completed:
 - Backend APIs with aiohttp for node status/control
 - TUI frontend using rich for visualization
 - Scenario YAMLs and run scripts
-- Basic tests and CI setup (pending)
-
-Pending:
 - Comprehensive tests for all modules
 - Full CI pipeline with GitHub Actions
-- Benchmarks and performance analysis
+- Benchmarks and performance analysis scripts
 - Docker integration
 - Replay functionality for logs
 - Advanced metrics and Grafana integration
+
+Pending:
+- None
