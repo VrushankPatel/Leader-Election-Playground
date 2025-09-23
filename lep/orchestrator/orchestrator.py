@@ -10,11 +10,8 @@ from ..algorithms.bully import BullyAlgorithm
 from ..algorithms.raft import RaftAlgorithm
 from ..algorithms.zab import ZabAlgorithm
 from ..network.controller import NetworkController
-from ..transport.transport import (
-    GRPCTransport,
-    MessageDispatcher,
-    SimulatedTransport,
-)
+from ..transport.transport import (GRPCTransport, MessageDispatcher,
+                                   SimulatedTransport)
 
 logger = logging.getLogger(__name__)
 
