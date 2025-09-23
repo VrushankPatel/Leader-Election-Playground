@@ -30,6 +30,8 @@ async def test_orchestrator_load_scenario():
 
 @pytest.mark.asyncio
 async def test_orchestrator_run_scenario():
+    import os
+    os.environ['TESTING'] = '1'
     scenario_data = {
         "name": "test_run",
         "algorithm": "bully",
@@ -72,11 +74,14 @@ def test_orchestrator_collect_metrics():
 
         # Mock nodes
         class MockAlgo:
+            def __init__(self):
+                self.algo = self
+
             def get_status(self):
                 return {"role": "follower", "leader_id": 3}
 
         orch.nodes = {1: MockAlgo(), 2: MockAlgo(), 3: MockAlgo()}
-        orch.nodes[3].get_status = lambda: {"role": "leader", "leader_id": 3}
+        orch.nodes[3].algo.get_status = lambda: {"role": "leader", "leader_id": 3}
         metrics = orch.collect_metrics()
         assert metrics["leaders"] == [3]
         assert not metrics["safety_violations"]
@@ -86,6 +91,8 @@ def test_orchestrator_collect_metrics():
 
 @pytest.mark.asyncio
 async def test_orchestrator_replay_scenario():
+    import os
+    os.environ['TESTING'] = '1'
     scenario_data = {
         "name": "test_replay",
         "algorithm": "bully",

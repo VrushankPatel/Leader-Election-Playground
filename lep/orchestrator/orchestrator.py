@@ -10,8 +10,8 @@ from ..algorithms.bully import BullyAlgorithm
 from ..algorithms.raft import RaftAlgorithm
 from ..algorithms.zab import ZabAlgorithm
 from ..network.controller import NetworkController
-from ..transport.transport import GRPCTransport, MessageDispatcher, SimulatedTransport
 from ..node import Node
+from ..transport.transport import GRPCTransport, MessageDispatcher
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,9 @@ class Orchestrator:
         if transport_type == "simulated":
             dispatcher = MessageDispatcher(start_monotonic=self.start_monotonic)
             for node_id in all_nodes:
-                node = Node(node_id, all_nodes, algorithm, message_dispatcher=dispatcher)
+                node = Node(
+                    node_id, all_nodes, algorithm, message_dispatcher=dispatcher
+                )
                 self.nodes[node_id] = node
                 await node.start()
         else:  # grpc
