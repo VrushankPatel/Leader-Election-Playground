@@ -57,14 +57,14 @@ class RaftAlgorithm:
 
     def load_persistent_state(self):
         if os.path.exists(self.voted_for_file):
-            with open(self.voted_for_file, 'r') as f:
+            with open(self.voted_for_file, "r") as f:
                 data = json.load(f)
-                self.voted_for = data.get('voted_for')
-                self.current_term = data.get('term', 0)
+                self.voted_for = data.get("voted_for")
+                self.current_term = data.get("term", 0)
 
     def save_persistent_state(self):
-        data = {'voted_for': self.voted_for, 'term': self.current_term}
-        with open(self.voted_for_file, 'w') as f:
+        data = {"voted_for": self.voted_for, "term": self.current_term}
+        with open(self.voted_for_file, "w") as f:
             json.dump(data, f)
 
     async def start(self):

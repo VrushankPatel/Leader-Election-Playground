@@ -121,7 +121,9 @@ async def test_orchestrator_replay_scenario():
             await orch_replay.replay_scenario(log_file)
 
             # Check replay results
-            replay_results_file = os.path.join(replay_output_dir, "results.json")
+            replay_results_file = os.path.join(
+                replay_output_dir, "results.json"
+            )
             assert os.path.exists(replay_results_file)
             with open(replay_results_file, "r") as f:
                 replay_metrics = json.load(f)
