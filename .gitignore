@@ -124,3 +124,7 @@ logs/
 # Benchmark results
 results/
 artifacts/
+benchmarks/
+
+# Persistence files
+node_*_voted_for.json

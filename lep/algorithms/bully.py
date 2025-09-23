@@ -42,6 +42,8 @@ class BullyAlgorithm:
         logger.info(f"Node {self.node_id} starting Bully algorithm")
         self.election_task = asyncio.create_task(self.election_timer())
         self.heartbeat_task = asyncio.create_task(self.heartbeat_sender())
+        if self.node_id == min(self.all_nodes):
+            await self.start_election()
 
     async def stop(self):
         if self.election_task:
@@ -70,6 +72,8 @@ class BullyAlgorithm:
                 await self.start_election()
 
     def should_start_election(self) -> bool:
+        if self.leader_id is None:
+            return True
         current_time = asyncio.get_event_loop().time()
         return current_time - self.last_heartbeat > self.election_timeout
 
@@ -103,14 +107,14 @@ class BullyAlgorithm:
         logger.info(f"Node {self.node_id} became leader")
         # Send coordinator to all
         await self.transport.broadcast(
-            {"type": "leader_announce", "leader_id": self.node_id}
+            {"type": "coordinator", "leader": self.node_id}
         )
 
     async def heartbeat_sender(self):
         while True:
             if self.state == BullyState.LEADER:
                 await self.transport.broadcast(
-                    {"type": "heartbeat", "leader_id": self.node_id}
+                    {"type": "heartbeat", "leader": self.node_id}
                 )
             await asyncio.sleep(self.heartbeat_interval)
 
