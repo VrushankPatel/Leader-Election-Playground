@@ -1,7 +1,7 @@
 name: network_partition
 algorithm: bully
 cluster_size: 5
-duration: 30
+duration: 10
 seed: 42
 transport: simulated
 network_conditions:

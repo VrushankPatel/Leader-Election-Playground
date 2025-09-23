@@ -44,8 +44,10 @@ def aggregate_results(results: Dict) -> Dict:
             "message_counts": [r.get("message_count", 0) for r in runs]
         }
         # Compute stats
-        for key, values in aggregated[scenario].items():
-            if isinstance(values, list) and values:
+        keys_to_process = [key for key in aggregated[scenario] if isinstance(aggregated[scenario][key], list)]
+        for key in keys_to_process:
+            values = aggregated[scenario][key]
+            if values:
                 aggregated[scenario][f"{key}_mean"] = statistics.mean(values)
                 aggregated[scenario][f"{key}_median"] = statistics.median(values)
                 aggregated[scenario][f"{key}_95p"] = statistics.quantiles(values, n=20)[18] if len(values) >= 20 else max(values)
