@@ -2,8 +2,12 @@ import asyncio
 from aiohttp import web
 import os
 
+async def index_handler(request):
+    return web.FileResponse(os.path.join(os.path.dirname(__file__), 'client', 'index.html'))
+
 async def main():
     app = web.Application()
+    app.router.add_get('/', index_handler)
     app.router.add_static('/', os.path.join(os.path.dirname(__file__), 'client'))
     runner = web.AppRunner(app)
     await runner.setup()
