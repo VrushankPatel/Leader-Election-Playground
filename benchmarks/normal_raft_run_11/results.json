@@ -1,0 +1,31 @@
+{
+  "scenario": "normal_election",
+  "algorithm": "raft",
+  "cluster_size": 3,
+  "duration": 30.003020763397217,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "candidate",
+      "leader_id": null,
+      "term": 1,
+      "uptime": 30.00262144600856
+    },
+    "2": {
+      "node_id": 2,
+      "role": "candidate",
+      "leader_id": null,
+      "term": 1,
+      "uptime": 30.00232000500546
+    },
+    "3": {
+      "node_id": 3,
+      "role": "candidate",
+      "leader_id": null,
+      "term": 1,
+      "uptime": 30.00207246100763
+    }
+  },
+  "leaders": [],
+  "safety_violations": false
+}
