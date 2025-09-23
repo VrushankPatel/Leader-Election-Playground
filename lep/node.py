@@ -3,6 +3,11 @@ import json
 import logging
 from aiohttp import web
 
+try:
+    from prometheus_client import Gauge, Counter, generate_latest
+except ImportError:
+    generate_latest = None
+
 from .algorithms.bully import BullyAlgorithm
 from .algorithms.raft import RaftAlgorithm
 from .algorithms.zab import ZabAlgorithm
@@ -28,16 +33,28 @@ class Node:
         else:
             raise ValueError(f"Unknown algorithm: {algorithm}")
 
+        # Prometheus metrics
+        if generate_latest:
+            self.leader_gauge = Gauge('leader_election_leader', 'Current leader ID', ['node_id'])
+            self.term_gauge = Gauge('leader_election_term', 'Current term', ['node_id'])
+            self.election_counter = Counter('leader_election_count', 'Number of elections started', ['node_id'])
+            self.leader_gauge.labels(node_id=self.node_id).set(0)
+            self.term_gauge.labels(node_id=self.node_id).set(0)
+
     async def start(self):
         await self.algo.start()
         app = web.Application()
         app.router.add_get('/status', self.status_handler)
         app.router.add_post('/control', self.control_handler)
+        if generate_latest:
+            app.router.add_get('/metrics', self.metrics_handler)
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, 'localhost', self.port)
         await site.start()
         logger.info(f"Node {self.node_id} listening on port {self.port}")
+        # Update metrics periodically
+        asyncio.create_task(self.update_metrics())
         # Keep running
         while True:
             await asyncio.sleep(1)
@@ -56,6 +73,19 @@ class Node:
             # Simulate restart
             pass
         return web.json_response({"status": "ok"})
+
+    async def metrics_handler(self, request):
+        if generate_latest:
+            status = self.algo.get_status()
+            self.leader_gauge.labels(node_id=self.node_id).set(status.get("leader_id", 0) or 0)
+            self.term_gauge.labels(node_id=self.node_id).set(status.get("term", 0))
+            return web.Response(text=generate_latest(), content_type='text/plain; charset=utf-8')
+        return web.Response(text="Metrics not available", status=503)
+
+    async def update_metrics(self):
+        while True:
+            await asyncio.sleep(5)  # Update every 5 seconds
+            # Could update counters here if needed
 
 async def main():
     import sys

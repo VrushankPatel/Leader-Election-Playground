@@ -1,0 +1,44 @@
+{
+  "dashboard": {
+    "title": "Leader Election Playground",
+    "tags": ["leader-election"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Current Leader",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "leader_election_leader",
+            "legendFormat": "{{node_id}}"
+          }
+        ]
+      },
+      {
+        "title": "Current Term",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "leader_election_term",
+            "legendFormat": "{{node_id}}"
+          }
+        ]
+      },
+      {
+        "title": "Elections Started",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(leader_election_count[5m])",
+            "legendFormat": "{{node_id}}"
+          }
+        ]
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "5s"
+  }
+}
