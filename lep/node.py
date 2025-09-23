@@ -1,17 +1,15 @@
 import asyncio
 import logging
 import os
+from typing import Optional
 
 from aiohttp import web
-
-
 
 from .algorithms.bully import BullyAlgorithm
 from .algorithms.raft import RaftAlgorithm
 from .algorithms.zab import ZabAlgorithm
 from .network.controller import NetworkController
-from typing import Optional
-from .transport.transport import SimulatedTransport, MessageDispatcher
+from .transport.transport import MessageDispatcher, SimulatedTransport
 
 logger = logging.getLogger(__name__)
 
@@ -42,11 +40,9 @@ class Node:
         else:
             raise ValueError(f"Unknown algorithm: {algorithm}")
 
-
-
     async def start(self):
         await self.algo.start()
-        if os.getenv('TESTING') != '1':
+        if os.getenv("TESTING") != "1":
             app = web.Application()
             app.router.add_get("/status", self.status_handler)
             app.router.add_post("/control", self.control_handler)
@@ -72,15 +68,11 @@ class Node:
             pass
         return web.json_response({"status": "ok"})
 
-
-
     async def stop(self):
         await self.algo.stop()
 
     async def restart(self):
         await self.algo.restart()
-
-
 
 
 async def main():

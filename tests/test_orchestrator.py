@@ -31,7 +31,8 @@ async def test_orchestrator_load_scenario():
 @pytest.mark.asyncio
 async def test_orchestrator_run_scenario():
     import os
-    os.environ['TESTING'] = '1'
+
+    os.environ["TESTING"] = "1"
     scenario_data = {
         "name": "test_run",
         "algorithm": "bully",
@@ -92,7 +93,8 @@ def test_orchestrator_collect_metrics():
 @pytest.mark.asyncio
 async def test_orchestrator_replay_scenario():
     import os
-    os.environ['TESTING'] = '1'
+
+    os.environ["TESTING"] = "1"
     scenario_data = {
         "name": "test_replay",
         "algorithm": "bully",
