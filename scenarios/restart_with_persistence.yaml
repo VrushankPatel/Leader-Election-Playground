@@ -1,0 +1,14 @@
+name: restart_with_persistence
+algorithm: raft
+cluster_size: 5
+duration: 30
+seed: 42
+transport: simulated
+network_conditions: []
+actions:
+  - time: 10
+    type: crash
+    node: 1
+  - time: 15
+    type: restart
+    node: 1

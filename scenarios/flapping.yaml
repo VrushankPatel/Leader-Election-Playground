@@ -1,0 +1,40 @@
+name: flapping
+algorithm: bully
+cluster_size: 5
+duration: 30
+seed: 42
+transport: simulated
+network_conditions: []
+actions:
+  - time: 5
+    type: partition
+    node1: 1
+    node2: 4
+  - time: 6
+    type: heal
+    node1: 1
+    node2: 4
+  - time: 10
+    type: partition
+    node1: 2
+    node2: 5
+  - time: 11
+    type: heal
+    node1: 2
+    node2: 5
+  - time: 15
+    type: partition
+    node1: 3
+    node2: 4
+  - time: 16
+    type: heal
+    node1: 3
+    node2: 4
+  - time: 20
+    type: partition
+    node1: 1
+    node2: 5
+  - time: 21
+    type: heal
+    node1: 1
+    node2: 5

@@ -51,6 +51,19 @@ class ZabAlgorithm:
         if self.heartbeat_task:
             self.heartbeat_task.cancel()
 
+    async def restart(self):
+        await self.stop()
+        # Reset state
+        self.state = ZabState.LOOKING
+        self.leader_id = None
+        self.epoch = 0
+        self.voted_for = None
+        self.votes_received = set()
+        self.acks_received = set()
+        self.last_activity = asyncio.get_event_loop().time()
+        self.start_time = asyncio.get_event_loop().time()
+        await self.start()
+
     async def election_timer(self):
         while True:
             await asyncio.sleep(self.election_timeout)

@@ -49,6 +49,17 @@ class BullyAlgorithm:
         if self.heartbeat_task:
             self.heartbeat_task.cancel()
 
+    async def restart(self):
+        await self.stop()
+        # Reset state
+        self.state = BullyState.FOLLOWER
+        self.leader_id = None
+        self.last_heartbeat = asyncio.get_event_loop().time()
+        self.start_time = asyncio.get_event_loop().time()
+        self.election_responses = set()
+        self.expecting_answers = False
+        await self.start()
+
     async def election_timer(self):
         while True:
             await asyncio.sleep(self.election_timeout)

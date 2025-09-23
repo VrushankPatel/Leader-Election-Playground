@@ -1,5 +1,7 @@
 import asyncio
+import json
 import logging
+import os
 import random
 from enum import Enum
 from typing import List, Optional
@@ -39,8 +41,8 @@ class RaftAlgorithm:
         self.election_task = None
         self.heartbeat_task = None
 
-        # Persistence (simulated)
-        self.persistent_voted_for = None
+        # Persistence
+        self.voted_for_file = f"node_{node_id}_voted_for.json"
 
         # Register handlers
         self.transport.register_handler(
@@ -53,8 +55,21 @@ class RaftAlgorithm:
             "append_entries", self.handle_append_entries
         )
 
+    def load_persistent_state(self):
+        if os.path.exists(self.voted_for_file):
+            with open(self.voted_for_file, 'r') as f:
+                data = json.load(f)
+                self.voted_for = data.get('voted_for')
+                self.current_term = data.get('term', 0)
+
+    def save_persistent_state(self):
+        data = {'voted_for': self.voted_for, 'term': self.current_term}
+        with open(self.voted_for_file, 'w') as f:
+            json.dump(data, f)
+
     async def start(self):
         logger.info(f"Node {self.node_id} starting Raft algorithm")
+        self.load_persistent_state()
         self.election_task = asyncio.create_task(self.election_timer())
         self.heartbeat_task = asyncio.create_task(self.heartbeat_sender())
 
@@ -63,6 +78,17 @@ class RaftAlgorithm:
             self.election_task.cancel()
         if self.heartbeat_task:
             self.heartbeat_task.cancel()
+
+    async def restart(self):
+        await self.stop()
+        # Reset volatile state
+        self.state = RaftState.FOLLOWER
+        self.leader_id = None
+        self.votes_received = 0
+        self.last_heartbeat = asyncio.get_event_loop().time()
+        self.start_time = asyncio.get_event_loop().time()
+        # Persistent state is loaded in start
+        await self.start()
 
     async def election_timer(self):
         while True:
@@ -84,7 +110,7 @@ class RaftAlgorithm:
         self.state = RaftState.CANDIDATE
         self.voted_for = self.node_id
         self.votes_received = 1  # vote for self
-        self.persist_vote()
+        self.save_persistent_state()
         logger.info(
             f"Node {self.node_id} starting election for term "
             f"{self.current_term}"

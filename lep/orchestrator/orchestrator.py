@@ -86,13 +86,26 @@ class Orchestrator:
                 self.nodes[node_id] = algo
                 await algo.start()
 
-        # Apply network conditions only for simulated transport
+        # Apply initial network conditions only for simulated transport
         if transport_type == "simulated":
             self.apply_network_conditions()
 
-        # Run for duration
+        # Run timed actions
+        actions = self.scenario.get("actions", [])
+        actions.sort(key=lambda x: x["time"])
+        current_time = 0
+        for action in actions:
+            sleep_time = action["time"] - current_time
+            if sleep_time > 0:
+                await asyncio.sleep(sleep_time)
+            await self.apply_action(action)
+            current_time = action["time"]
+
+        # Run remaining duration
         duration = self.scenario.get("duration", 30)
-        await asyncio.sleep(duration)
+        remaining = duration - current_time
+        if remaining > 0:
+            await asyncio.sleep(remaining)
 
         # Collect metrics
         metrics = self.collect_metrics()
@@ -149,7 +162,7 @@ class Orchestrator:
         self.save_results(metrics)
 
     def apply_network_conditions(self):
-        conditions = self.scenario.get("network_conditions", {})
+        conditions = self.scenario.get("network_conditions", [])
         for cond in conditions:
             if cond["type"] == "partition":
                 self.network_controller.set_partition(
@@ -163,6 +176,22 @@ class Orchestrator:
                 self.network_controller.set_drop_rate(
                     cond["node1"], cond["node2"], cond["rate"]
                 )
+
+    async def apply_action(self, action):
+        if action["type"] == "partition":
+            self.network_controller.set_partition(
+                action["node1"], action["node2"], True
+            )
+        elif action["type"] == "heal":
+            self.network_controller.set_partition(
+                action["node1"], action["node2"], False
+            )
+        elif action["type"] == "crash":
+            await self.nodes[action["node"]].stop()
+        elif action["type"] == "restart":
+            await self.nodes[action["node"]].restart()
+        else:
+            logger.warning(f"Unknown action type: {action['type']}")
 
     def collect_metrics(self) -> Dict:
         duration = time.time() - self.start_time if self.start_time else 0

@@ -1,0 +1,61 @@
+{
+  "scenario": "message_delay_7_bully",
+  "algorithm": "bully",
+  "cluster_size": 7,
+  "duration": 10.001258850097656,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "follower",
+      "leader_id": 7,
+      "term": 0,
+      "uptime": 10.001233327988302
+    },
+    "2": {
+      "node_id": 2,
+      "role": "follower",
+      "leader_id": 7,
+      "term": 0,
+      "uptime": 10.00119260197971
+    },
+    "3": {
+      "node_id": 3,
+      "role": "follower",
+      "leader_id": 7,
+      "term": 0,
+      "uptime": 10.001176202000352
+    },
+    "4": {
+      "node_id": 4,
+      "role": "follower",
+      "leader_id": 7,
+      "term": 0,
+      "uptime": 10.001161860011052
+    },
+    "5": {
+      "node_id": 5,
+      "role": "follower",
+      "leader_id": 7,
+      "term": 0,
+      "uptime": 10.00115426699631
+    },
+    "6": {
+      "node_id": 6,
+      "role": "follower",
+      "leader_id": 7,
+      "term": 0,
+      "uptime": 10.001139517989941
+    },
+    "7": {
+      "node_id": 7,
+      "role": "leader",
+      "leader_id": 7,
+      "term": 0,
+      "uptime": 10.001127165014623
+    }
+  },
+  "leaders": [
+    7
+  ],
+  "safety_violations": false
+}
