@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  lep:
+    build: .
+    volumes:
+      - .:/app
+      - ./results:/app/results
+    command: python run_scenario.py scenarios/normal.yaml
+    environment:
+      - PYTHONPATH=/app
