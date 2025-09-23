@@ -4,18 +4,20 @@ from unittest.mock import AsyncMock
 
 from lep.algorithms.raft import RaftAlgorithm
 from lep.network.controller import NetworkController
-from lep.transport.transport import SimulatedTransport
+from lep.transport.transport import SimulatedTransport, MessageDispatcher
 
 
 @pytest.mark.asyncio
 async def test_raft_election():
     all_nodes = [1, 2, 3]
     network = NetworkController()
+    dispatcher = MessageDispatcher()
     transports = {}
     algorithms = {}
 
     for node_id in all_nodes:
-        transports[node_id] = SimulatedTransport(node_id, all_nodes, network)
+        transports[node_id] = SimulatedTransport(node_id, all_nodes, network, dispatcher)
+        dispatcher.register_transport(node_id, transports[node_id])
         algorithms[node_id] = RaftAlgorithm(node_id, all_nodes, transports[node_id])
 
     # Start all algorithms
@@ -39,11 +41,13 @@ async def test_raft_election():
 async def test_raft_heartbeat():
     all_nodes = [1, 2, 3]
     network = NetworkController()
+    dispatcher = MessageDispatcher()
     transports = {}
     algorithms = {}
 
     for node_id in all_nodes:
-        transports[node_id] = SimulatedTransport(node_id, all_nodes, network)
+        transports[node_id] = SimulatedTransport(node_id, all_nodes, network, dispatcher)
+        dispatcher.register_transport(node_id, transports[node_id])
         algorithms[node_id] = RaftAlgorithm(node_id, all_nodes, transports[node_id])
 
     # Start all
@@ -69,11 +73,13 @@ async def test_raft_heartbeat():
 async def test_raft_leader_failure():
     all_nodes = [1, 2, 3]
     network = NetworkController()
+    dispatcher = MessageDispatcher()
     transports = {}
     algorithms = {}
 
     for node_id in all_nodes:
-        transports[node_id] = SimulatedTransport(node_id, all_nodes, network)
+        transports[node_id] = SimulatedTransport(node_id, all_nodes, network, dispatcher)
+        dispatcher.register_transport(node_id, transports[node_id])
         algorithms[node_id] = RaftAlgorithm(node_id, all_nodes, transports[node_id])
 
     # Start all

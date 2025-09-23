@@ -75,11 +75,12 @@ class Orchestrator:
                 self.network_controller.set_drop_rate(cond["node1"], cond["node2"], cond["rate"])
 
     def collect_metrics(self) -> Dict:
+        duration = time.time() - self.start_time if self.start_time else 0
         metrics = {
             "scenario": self.scenario["name"],
             "algorithm": self.scenario["algorithm"],
             "cluster_size": self.scenario["cluster_size"],
-            "duration": time.time() - self.start_time,
+            "duration": duration,
             "nodes": {}
         }
         leaders = []

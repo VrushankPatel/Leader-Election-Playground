@@ -23,7 +23,8 @@ class ZabAlgorithm:
         self.voted_for: Optional[int] = None
         self.votes_received: Set[int] = set()
         self.acks_received: Set[int] = set()
-        self.election_timeout = 3.0
+        self.election_timeout = 1.0
+        self.heartbeat_interval = 0.5
         self.last_activity = asyncio.get_event_loop().time()
         self.start_time = asyncio.get_event_loop().time()
 
@@ -31,10 +32,12 @@ class ZabAlgorithm:
         self.transport.register_handler("vote", self.handle_vote)
         self.transport.register_handler("ack", self.handle_ack)
         self.transport.register_handler("leader", self.handle_leader)
+        self.transport.register_handler("heartbeat", self.handle_heartbeat)
 
     async def start(self):
         logger.info(f"Node {self.node_id} starting Zab algorithm")
         asyncio.create_task(self.election_timer())
+        asyncio.create_task(self.heartbeat_sender())
 
     async def election_timer(self):
         while True:
@@ -83,6 +86,12 @@ class ZabAlgorithm:
         }
         await self.transport.broadcast(leader_msg)
 
+    async def heartbeat_sender(self):
+        while True:
+            if self.state == ZabState.LEADER:
+                await self.transport.broadcast({"type": "heartbeat", "leader": self.node_id, "epoch": self.epoch})
+            await asyncio.sleep(self.heartbeat_interval)
+
     async def handle_vote(self, message):
         epoch = message["epoch"]
         candidate = message["candidate"]
@@ -118,6 +127,12 @@ class ZabAlgorithm:
             self.state = ZabState.FOLLOWING if leader != self.node_id else ZabState.LEADER
             self.last_activity = asyncio.get_event_loop().time()
             logger.info(f"Node {self.node_id} following leader {leader}")
+
+    async def handle_heartbeat(self, message):
+        self.last_activity = asyncio.get_event_loop().time()
+        # Update leader if from leader
+        if "leader" in message:
+            self.leader_id = message["leader"]
 
     def get_status(self):
         return {

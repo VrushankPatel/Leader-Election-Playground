@@ -54,6 +54,9 @@ class SimulatedTransport(Transport):
             await asyncio.sleep(delay / 1000.0)  # delay in ms
         if self.network_controller.should_drop(self.node_id, to_node):
             return None
+        # Add 'from' if not present
+        if "from" not in message:
+            message["from"] = self.node_id
         # Deliver the message to the target node's transport
         response = await self.message_dispatcher.deliver_message(self.node_id, to_node, message)
         return response
