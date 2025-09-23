@@ -10,7 +10,7 @@ from ..algorithms.bully import BullyAlgorithm
 from ..algorithms.raft import RaftAlgorithm
 from ..algorithms.zab import ZabAlgorithm
 from ..network.controller import NetworkController
-from ..transport.transport import SimulatedTransport
+from ..transport.transport import SimulatedTransport, MessageDispatcher
 
 logger = logging.getLogger(__name__)
 
@@ -35,9 +35,13 @@ class Orchestrator:
         algorithm = self.scenario["algorithm"]
         all_nodes = list(range(1, cluster_size + 1))
 
+        # Create message dispatcher
+        dispatcher = MessageDispatcher()
+
         # Start nodes
         for node_id in all_nodes:
-            transport = SimulatedTransport(node_id, all_nodes, self.network_controller)
+            transport = SimulatedTransport(node_id, all_nodes, self.network_controller, dispatcher)
+            dispatcher.register_transport(node_id, transport)
             if algorithm == "bully":
                 algo = BullyAlgorithm(node_id, all_nodes, transport)
             elif algorithm == "raft":

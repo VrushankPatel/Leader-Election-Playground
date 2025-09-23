@@ -249,21 +249,23 @@ Complexity of Zab. Implement simplified variant focusing on leader election.
 
 Completed:
 - Project structure with Python, requirements, setup.py
-- Transport layer with simulated transport and protobuf messages
+- Transport layer with simulated transport and message dispatcher for inter-node communication
 - Network controller for partitions, delays, drops
-- Bully algorithm implementation
-- Raft election module
-- Zab leader election module
-- Orchestrator for scenario running and metrics
-- Backend APIs with aiohttp for node status/control
-- TUI frontend using rich for visualization
+- Bully algorithm implementation with correct highest-ID leader election
+- Raft election module with proper vote handling and leader election
+- Zab leader election module with proposal/ack mechanism
+- Orchestrator for scenario running and metrics collection
+- Node uptime calculation in status
 - Scenario YAMLs and run scripts
-- Comprehensive tests for all modules
-- Full CI pipeline with GitHub Actions
-- Benchmarks and performance analysis scripts
-- Docker integration
-- Replay functionality for logs
-- Advanced metrics and Grafana integration
+- Comprehensive tests for all modules (pytest framework)
+- Full CI pipeline with GitHub Actions (linting, testing)
+- Benchmarks and performance analysis scripts (analyze.py, benchmark.py)
+- Docker integration (docker-compose.yml, Dockerfile)
+- Replay functionality for logs (planned)
+- TUI frontend using rich for visualization (fetches status via HTTP APIs)
+- Backend HTTP APIs for node status and control (aiohttp-based Node class)
+- Advanced metrics collection and analysis
 
 Pending:
-- None
+- Complete GRPC transport implementation for real network communication
+- Grafana dashboard integration for metrics visualization

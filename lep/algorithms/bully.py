@@ -22,11 +22,15 @@ class BullyAlgorithm:
         self.election_timeout = 5.0  # seconds
         self.heartbeat_interval = 1.0
         self.last_heartbeat = asyncio.get_event_loop().time()
+        self.start_time = asyncio.get_event_loop().time()
+        self.election_responses = set()
+        self.expecting_answers = False
 
         # Register message handlers
         self.transport.register_handler("election", self.handle_election)
         self.transport.register_handler("answer", self.handle_answer)
         self.transport.register_handler("coordinator", self.handle_coordinator)
+        self.transport.register_handler("heartbeat", self.handle_heartbeat)
 
     async def start(self):
         logger.info(f"Node {self.node_id} starting Bully algorithm")
@@ -52,13 +56,17 @@ class BullyAlgorithm:
             await self.become_leader()
             return
 
+        self.expecting_answers = True
+        self.election_responses = set()
         # Send election to higher nodes
-        responses = await self.transport.broadcast({"type": "election", "from": self.node_id})
-        # Wait for answers
-        await asyncio.sleep(1.0)  # Wait for answers
-        # If no answers from higher nodes, become leader
-        answered = [n for n, resp in responses.items() if resp and isinstance(resp, dict) and resp.get("type") == "answer"]
-        if not any(n in answered for n in higher_nodes):
+        for node in higher_nodes:
+            await self.transport.send_message(node, {"type": "election", "from": self.node_id})
+
+        # Wait for answers or timeout
+        await asyncio.sleep(2.0)
+        self.expecting_answers = False
+        if not self.election_responses:
+            # No answers, become leader
             await self.become_leader()
 
     async def become_leader(self):
@@ -84,8 +92,8 @@ class BullyAlgorithm:
                 await self.start_election()
 
     async def handle_answer(self, message):
-        # Reset election if answered
-        pass  # In bully, answers prevent becoming leader
+        if self.expecting_answers:
+            self.election_responses.add(message["from"])  # In bully, answers prevent becoming leader
 
     async def handle_coordinator(self, message):
         leader = message["leader"]
@@ -94,11 +102,17 @@ class BullyAlgorithm:
         self.last_heartbeat = asyncio.get_event_loop().time()
         logger.info(f"Node {self.node_id} acknowledges leader {leader}")
 
+    async def handle_heartbeat(self, message):
+        self.last_heartbeat = asyncio.get_event_loop().time()
+        # If not leader, update leader_id if from leader
+        if "leader" in message:
+            self.leader_id = message["leader"]
+
     def get_status(self):
         return {
             "node_id": self.node_id,
             "role": self.state.value,
             "leader_id": self.leader_id,
             "term": 0,  # Bully doesn't have terms
-            "uptime": 0  # TODO
+            "uptime": asyncio.get_event_loop().time() - self.start_time
         }

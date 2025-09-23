@@ -7,18 +7,18 @@ from .algorithms.bully import BullyAlgorithm
 from .algorithms.raft import RaftAlgorithm
 from .algorithms.zab import ZabAlgorithm
 from .network.controller import NetworkController
-from .transport.transport import SimulatedTransport
+from .transport.transport import SimulatedTransport, MessageDispatcher
 
 logger = logging.getLogger(__name__)
 
 class Node:
-    def __init__(self, node_id: int, all_nodes: list, algorithm: str, port: int = 8080):
+    def __init__(self, node_id: int, all_nodes: list, algorithm: str, port: int = 8080, message_dispatcher=None):
         self.node_id = node_id
         self.all_nodes = all_nodes
         self.algorithm = algorithm
         self.port = port + node_id
         self.network_controller = NetworkController()
-        transport = SimulatedTransport(node_id, all_nodes, self.network_controller)
+        transport = SimulatedTransport(node_id, all_nodes, self.network_controller, message_dispatcher)
         if algorithm == "bully":
             self.algo = BullyAlgorithm(node_id, all_nodes, transport)
         elif algorithm == "raft":

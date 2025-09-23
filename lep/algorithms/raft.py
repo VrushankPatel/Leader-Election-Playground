@@ -27,6 +27,7 @@ class RaftAlgorithm:
         self.election_timeout = self.rng.uniform(1.0, 2.0)  # seconds
         self.heartbeat_interval = 0.5
         self.last_heartbeat = asyncio.get_event_loop().time()
+        self.start_time = asyncio.get_event_loop().time()
 
         # Persistence (simulated)
         self.persistent_voted_for = None
@@ -146,5 +147,5 @@ class RaftAlgorithm:
             "role": self.state.value,
             "leader_id": self.leader_id,
             "term": self.current_term,
-            "uptime": 0  # TODO
+            "uptime": asyncio.get_event_loop().time() - self.start_time
         }

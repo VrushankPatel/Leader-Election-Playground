@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class ZabState(Enum):
     LOOKING = "looking"
-    LEADING = "leading"
+    LEADER = "leader"
     FOLLOWING = "following"
 
 class ZabAlgorithm:
@@ -25,6 +25,7 @@ class ZabAlgorithm:
         self.acks_received: Set[int] = set()
         self.election_timeout = 3.0
         self.last_activity = asyncio.get_event_loop().time()
+        self.start_time = asyncio.get_event_loop().time()
 
         # Register handlers
         self.transport.register_handler("vote", self.handle_vote)
@@ -71,7 +72,7 @@ class ZabAlgorithm:
             await self.become_leader()
 
     async def become_leader(self):
-        self.state = ZabState.LEADING
+        self.state = ZabState.LEADER
         self.leader_id = self.node_id
         logger.info(f"Node {self.node_id} became leader for epoch {self.epoch}")
         # Send leader message
@@ -114,7 +115,7 @@ class ZabAlgorithm:
         if epoch >= self.epoch:
             self.epoch = epoch
             self.leader_id = leader
-            self.state = ZabState.FOLLOWING if leader != self.node_id else ZabState.LEADING
+            self.state = ZabState.FOLLOWING if leader != self.node_id else ZabState.LEADER
             self.last_activity = asyncio.get_event_loop().time()
             logger.info(f"Node {self.node_id} following leader {leader}")
 
@@ -124,5 +125,5 @@ class ZabAlgorithm:
             "role": self.state.value,
             "leader_id": self.leader_id,
             "term": self.epoch,
-            "uptime": 0  # TODO
+            "uptime": asyncio.get_event_loop().time() - self.start_time
         }
