@@ -275,7 +275,7 @@ Completed:
 
 Completed:
 - All features implemented, tested, and linted; project ready for benchmarking and production use.
-- Code formatting and linting completed with black, isort, and flake8.
+- Code formatting and linting completed with black, isort, and flake8; CI config updated to exclude generated protobuf files.
 - CI pipeline passing with tests and linting.
 - Benchmark runs completed for all scenarios (normal, single_node_crash, network_partition, message_delay, packet_loss, flapping, restart_with_persistence) with 20 runs each for bully, raft, and zab algorithms on 3, 5, and 7-node clusters.
 - Final benchmark report generated with graphs and analysis.
