@@ -11,12 +11,49 @@ def analyze_results(results_file: str, output_dir: str = "analysis"):
 
     # Generate plots
     scenarios = list(results.keys())
-    means = [results[s].get("election_latencies_mean", 0) for s in scenarios]
 
+    # Election latency
+    means = [results[s].get("election_latencies_mean", 0) for s in scenarios]
+    plt.figure(figsize=(10, 6))
     plt.bar(scenarios, means)
     plt.title("Mean Election Latency by Scenario")
     plt.ylabel("Latency (s)")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     plt.savefig(f"{output_dir}/election_latency.png")
+    plt.close()
+
+    # Leader uptime
+    uptimes = [results[s].get("leader_uptimes_mean", 0) for s in scenarios]
+    plt.figure(figsize=(10, 6))
+    plt.bar(scenarios, uptimes)
+    plt.title("Mean Leader Uptime Fraction by Scenario")
+    plt.ylabel("Uptime Fraction")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}/leader_uptime.png")
+    plt.close()
+
+    # Safety violations
+    violations = [results[s].get("safety_violations", 0) for s in scenarios]
+    plt.figure(figsize=(10, 6))
+    plt.bar(scenarios, violations)
+    plt.title("Safety Violations by Scenario")
+    plt.ylabel("Number of Violations")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}/safety_violations.png")
+    plt.close()
+
+    # Message counts
+    messages = [results[s].get("message_counts_mean", 0) for s in scenarios]
+    plt.figure(figsize=(10, 6))
+    plt.bar(scenarios, messages)
+    plt.title("Mean Message Count by Scenario")
+    plt.ylabel("Message Count")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(f"{output_dir}/message_count.png")
     plt.close()
 
     print(f"Analysis plots saved to {output_dir}")
