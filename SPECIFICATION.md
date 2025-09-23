@@ -275,5 +275,6 @@ Completed:
 Completed:
 - Web UI frontend served on port 8080 with cluster visualization
 - Integrated Node HTTP APIs into orchestrator for real-time web UI updates
+- Fixed bug in Node class where SimulatedTransport was not registered with MessageDispatcher, causing messages not to be delivered in simulated scenarios. This resolved safety violations in Bully algorithm.
 
 Pending work: None - project is production-ready.

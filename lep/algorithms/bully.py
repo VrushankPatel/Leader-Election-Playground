@@ -107,7 +107,7 @@ class BullyAlgorithm:
         while True:
             if self.state == BullyState.LEADER:
                 await self.transport.broadcast(
-                    {"type": "heartbeat", "leader_id": self.node_id}
+                    {"type": "heartbeat", "leader": self.node_id}
                 )
             await asyncio.sleep(self.heartbeat_interval)
 
@@ -139,7 +139,7 @@ class BullyAlgorithm:
 
     async def handle_heartbeat(self, message):
         self.last_heartbeat = asyncio.get_event_loop().time()
-        # If not leader, update leader_id if from leader
+        # Update leader_id
         if "leader" in message:
             self.leader_id = message["leader"]
 

@@ -31,6 +31,8 @@ class Node:
         transport = SimulatedTransport(
             node_id, all_nodes, self.network_controller, message_dispatcher
         )
+        if message_dispatcher:
+            message_dispatcher.register_transport(node_id, transport)
         if algorithm == "bully":
             self.algo = BullyAlgorithm(node_id, all_nodes, transport)
         elif algorithm == "raft":
