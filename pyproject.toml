@@ -4,6 +4,4 @@ line-length = 79
 [tool.flake8]
 max-line-length = 79
 extend-ignore = ["E203", "W503"]
-exclude = [
-    "lep/transport/proto/",
-]
+exclude = ["lep/transport/proto/"]
