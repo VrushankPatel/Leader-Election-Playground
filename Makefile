@@ -26,3 +26,6 @@ clean:
 
 run-scenario:
 	python -m lep.orchestrator run-scenario $(ARGS)
+
+web:
+	python web_server.py
