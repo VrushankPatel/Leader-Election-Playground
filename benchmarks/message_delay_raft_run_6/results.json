@@ -1,0 +1,45 @@
+{
+  "scenario": "message_delay",
+  "algorithm": "raft",
+  "cluster_size": 5,
+  "duration": 10.001800298690796,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 6,
+      "uptime": 10.001780354999937
+    },
+    "2": {
+      "node_id": 2,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 5,
+      "uptime": 10.001727955997922
+    },
+    "3": {
+      "node_id": 3,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 5,
+      "uptime": 10.001699600979919
+    },
+    "4": {
+      "node_id": 4,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 5,
+      "uptime": 10.001673498016316
+    },
+    "5": {
+      "node_id": 5,
+      "role": "candidate",
+      "leader_id": 1,
+      "term": 6,
+      "uptime": 10.001648459001444
+    }
+  },
+  "leaders": [],
+  "safety_violations": false
+}

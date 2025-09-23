@@ -1,0 +1,7 @@
+name: normal_7_bully_election
+algorithm: bully
+cluster_size: 7
+duration: 30
+seed: 42
+transport: grpc
+network_conditions: []
