@@ -1,5 +1,6 @@
 import random
-from typing import Dict, List, Set, Tuple
+from typing import Dict, Set, Tuple
+
 
 class NetworkController:
     def __init__(self, seed: int = 42):

@@ -1,8 +1,7 @@
-import asyncio
 import pytest
 
 from lep.network.controller import NetworkController
-from lep.transport.transport import SimulatedTransport, MessageDispatcher
+from lep.transport.transport import MessageDispatcher, SimulatedTransport
 
 
 @pytest.mark.asyncio
@@ -68,7 +67,9 @@ def test_simulated_transport_register_handler():
     network = NetworkController()
     dispatcher = MessageDispatcher()
     transport = SimulatedTransport(1, [1, 2], network, dispatcher)
+
     def dummy_handler(msg):
         return "handled"
+
     transport.register_handler("test", dummy_handler)
     assert "test" in transport.handlers

@@ -1,9 +1,11 @@
 import asyncio
+
 import pytest
 
 from lep.algorithms.bully import BullyAlgorithm
 from lep.network.controller import NetworkController
-from lep.transport.transport import SimulatedTransport, MessageDispatcher
+from lep.transport.transport import MessageDispatcher, SimulatedTransport
+
 
 @pytest.mark.asyncio
 async def test_bully_election():
@@ -14,9 +16,13 @@ async def test_bully_election():
     algorithms = {}
 
     for node_id in all_nodes:
-        transports[node_id] = SimulatedTransport(node_id, all_nodes, network, dispatcher)
+        transports[node_id] = SimulatedTransport(
+            node_id, all_nodes, network, dispatcher
+        )
         dispatcher.register_transport(node_id, transports[node_id])
-        algorithms[node_id] = BullyAlgorithm(node_id, all_nodes, transports[node_id])
+        algorithms[node_id] = BullyAlgorithm(
+            node_id, all_nodes, transports[node_id]
+        )
 
     # Start all algorithms
     for algo in algorithms.values():

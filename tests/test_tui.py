@@ -1,5 +1,5 @@
-import asyncio
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 import pytest
 
 from lep.tui.tui import TUI
@@ -27,7 +27,7 @@ class MockContextManager:
 @pytest.mark.asyncio
 async def test_tui_fetch_status():
     tui = TUI([1], {1: 8081})
-    with patch('lep.tui.tui.aiohttp.ClientSession') as mock_session_class:
+    with patch("lep.tui.tui.aiohttp.ClientSession") as mock_session_class:
         mock_session = MagicMock()
         mock_resp = MockResponse({"node_id": 1, "role": "leader"})
         mock_get_cm = MockContextManager(mock_resp)
@@ -42,6 +42,8 @@ async def test_tui_fetch_status():
 @pytest.mark.asyncio
 async def test_tui_fetch_status_error():
     tui = TUI([1], {1: 8081})
-    with patch('aiohttp.ClientSession', side_effect=Exception("Connection error")):
+    with patch(
+        "aiohttp.ClientSession", side_effect=Exception("Connection error")
+    ):
         status = await tui.fetch_status(1)
         assert status["role"] == "unknown"

@@ -8,13 +8,21 @@ from ..transport.transport import Transport
 
 logger = logging.getLogger(__name__)
 
+
 class RaftState(Enum):
     FOLLOWER = "follower"
     CANDIDATE = "candidate"
     LEADER = "leader"
 
+
 class RaftAlgorithm:
-    def __init__(self, node_id: int, all_nodes: List[int], transport: Transport, seed: int = 42):
+    def __init__(
+        self,
+        node_id: int,
+        all_nodes: List[int],
+        transport: Transport,
+        seed: int = 42,
+    ):
         self.node_id = node_id
         self.all_nodes = all_nodes
         self.transport = transport
@@ -35,9 +43,15 @@ class RaftAlgorithm:
         self.persistent_voted_for = None
 
         # Register handlers
-        self.transport.register_handler("request_vote", self.handle_request_vote)
-        self.transport.register_handler("vote_response", self.handle_vote_response)
-        self.transport.register_handler("append_entries", self.handle_append_entries)
+        self.transport.register_handler(
+            "request_vote", self.handle_request_vote
+        )
+        self.transport.register_handler(
+            "vote_response", self.handle_vote_response
+        )
+        self.transport.register_handler(
+            "append_entries", self.handle_append_entries
+        )
 
     async def start(self):
         logger.info(f"Node {self.node_id} starting Raft algorithm")
@@ -52,7 +66,11 @@ class RaftAlgorithm:
 
     async def election_timer(self):
         while True:
-            timeout = self.election_timeout if self.state != RaftState.LEADER else float('inf')
+            timeout = (
+                self.election_timeout
+                if self.state != RaftState.LEADER
+                else float("inf")
+            )
             await asyncio.sleep(timeout)
             if self.state != RaftState.LEADER and self.should_start_election():
                 await self.start_election()
@@ -67,7 +85,10 @@ class RaftAlgorithm:
         self.voted_for = self.node_id
         self.votes_received = 1  # vote for self
         self.persist_vote()
-        logger.info(f"Node {self.node_id} starting election for term {self.current_term}")
+        logger.info(
+            f"Node {self.node_id} starting election for term "
+            f"{self.current_term}"
+        )
 
         # Request votes from all
         vote_req = {
@@ -75,7 +96,7 @@ class RaftAlgorithm:
             "term": self.current_term,
             "candidate_id": self.node_id,
             "last_log_index": 0,
-            "last_log_term": 0
+            "last_log_term": 0,
         }
         responses = await self.transport.broadcast(vote_req)
         # Process responses (in real, async)
@@ -90,7 +111,9 @@ class RaftAlgorithm:
     async def become_leader(self):
         self.state = RaftState.LEADER
         self.leader_id = self.node_id
-        logger.info(f"Node {self.node_id} became leader for term {self.current_term}")
+        logger.info(
+            f"Node {self.node_id} became leader for term {self.current_term}"
+        )
         # Send initial heartbeat
         await self.send_heartbeat()
 
@@ -103,7 +126,7 @@ class RaftAlgorithm:
                 "prev_log_index": 0,
                 "prev_log_term": 0,
                 "entries": [],
-                "leader_commit": 0
+                "leader_commit": 0,
             }
             await self.transport.broadcast(heartbeat)
 
@@ -119,14 +142,16 @@ class RaftAlgorithm:
             self.current_term = term
             self.state = RaftState.FOLLOWER
             self.voted_for = None
-        granted = (self.voted_for is None or self.voted_for == candidate) and term >= self.current_term
+        granted = (
+            self.voted_for is None or self.voted_for == candidate
+        ) and term >= self.current_term
         if granted:
             self.voted_for = candidate
             self.persist_vote()
         response = {
             "type": "vote_response",
             "term": self.current_term,
-            "vote_granted": granted
+            "vote_granted": granted,
         }
         return response
 
@@ -143,7 +168,11 @@ class RaftAlgorithm:
             self.leader_id = leader
             self.last_heartbeat = asyncio.get_event_loop().time()
             # Send success response
-            return {"type": "append_response", "term": self.current_term, "success": True}
+            return {
+                "type": "append_response",
+                "term": self.current_term,
+                "success": True,
+            }
 
     def persist_vote(self):
         # Simulate persistence
@@ -155,5 +184,5 @@ class RaftAlgorithm:
             "role": self.state.value,
             "leader_id": self.leader_id,
             "term": self.current_term,
-            "uptime": asyncio.get_event_loop().time() - self.start_time
+            "uptime": asyncio.get_event_loop().time() - self.start_time,
         }

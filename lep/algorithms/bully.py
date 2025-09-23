@@ -7,13 +7,17 @@ from ..transport.transport import Transport
 
 logger = logging.getLogger(__name__)
 
+
 class BullyState(Enum):
     FOLLOWER = "follower"
     CANDIDATE = "candidate"
     LEADER = "leader"
 
+
 class BullyAlgorithm:
-    def __init__(self, node_id: int, all_nodes: List[int], transport: Transport):
+    def __init__(
+        self, node_id: int, all_nodes: List[int], transport: Transport
+    ):
         self.node_id = node_id
         self.all_nodes = sorted(all_nodes)
         self.transport = transport
@@ -48,7 +52,10 @@ class BullyAlgorithm:
     async def election_timer(self):
         while True:
             await asyncio.sleep(self.election_timeout)
-            if self.state != BullyState.LEADER and self.should_start_election():
+            if (
+                self.state != BullyState.LEADER
+                and self.should_start_election()
+            ):
                 await self.start_election()
 
     def should_start_election(self) -> bool:
@@ -68,7 +75,9 @@ class BullyAlgorithm:
         self.election_responses = set()
         # Send election to higher nodes
         for node in higher_nodes:
-            await self.transport.send_message(node, {"type": "election", "from": self.node_id})
+            await self.transport.send_message(
+                node, {"type": "election", "from": self.node_id}
+            )
 
         # Wait for answers or timeout
         await asyncio.sleep(2.0)
@@ -82,31 +91,43 @@ class BullyAlgorithm:
         self.leader_id = self.node_id
         logger.info(f"Node {self.node_id} became leader")
         # Send coordinator to all
-        await self.transport.broadcast({"type": "coordinator", "leader": self.node_id})
+        await self.transport.broadcast(
+            {"type": "coordinator", "leader": self.node_id}
+        )
 
     async def heartbeat_sender(self):
         while True:
             if self.state == BullyState.LEADER:
-                await self.transport.broadcast({"type": "heartbeat", "leader": self.node_id})
+                await self.transport.broadcast(
+                    {"type": "heartbeat", "leader": self.node_id}
+                )
             await asyncio.sleep(self.heartbeat_interval)
 
     async def handle_election(self, message):
         sender = message["from"]
         if sender < self.node_id:
             # Send answer
-            await self.transport.send_message(sender, {"type": "answer", "from": self.node_id})
+            await self.transport.send_message(
+                sender, {"type": "answer", "from": self.node_id}
+            )
             # Start own election if not already
             if self.state != BullyState.CANDIDATE:
                 await self.start_election()
 
     async def handle_answer(self, message):
         if self.expecting_answers:
-            self.election_responses.add(message["from"])  # In bully, answers prevent becoming leader
+            self.election_responses.add(
+                message["from"]
+            )  # In bully, answers prevent becoming leader
 
     async def handle_coordinator(self, message):
         leader = message["leader"]
         self.leader_id = leader
-        self.state = BullyState.FOLLOWER if leader != self.node_id else BullyState.LEADER
+        self.state = (
+            BullyState.FOLLOWER
+            if leader != self.node_id
+            else BullyState.LEADER
+        )
         self.last_heartbeat = asyncio.get_event_loop().time()
         logger.info(f"Node {self.node_id} acknowledges leader {leader}")
 
@@ -122,5 +143,5 @@ class BullyAlgorithm:
             "role": self.state.value,
             "leader_id": self.leader_id,
             "term": 0,  # Bully doesn't have terms
-            "uptime": asyncio.get_event_loop().time() - self.start_time
+            "uptime": asyncio.get_event_loop().time() - self.start_time,
         }
