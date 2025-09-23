@@ -261,10 +261,11 @@ Completed:
 - Full CI pipeline with GitHub Actions (linting, testing)
 - Benchmarks and performance analysis scripts (analyze.py, benchmark.py)
 - Docker integration (docker-compose.yml, Dockerfile)
-- Replay functionality for logs (planned)
+- Replay functionality for logs (completed)
 - TUI frontend using rich for visualization (fetches status via HTTP APIs)
 - Backend HTTP APIs for node status and control (aiohttp-based Node class)
 - Advanced metrics collection and analysis
+- Replay functionality for deterministic debugging of message logs
 
 Completed:
 - All features implemented, tested, and linted; project ready for benchmarking and production use.

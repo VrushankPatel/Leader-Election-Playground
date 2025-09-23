@@ -1,5 +1,7 @@
 import asyncio
+import json
 import logging
+import time
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Optional
 
@@ -17,17 +19,32 @@ logger = logging.getLogger(__name__)
 
 
 class MessageDispatcher:
-    def __init__(self):
+    def __init__(self, start_monotonic: float = 0.0):
         self.transports: Dict[int, Any] = {}
+        self.logs: List[Dict] = []
+        self.start_monotonic = start_monotonic
 
     def register_transport(self, node_id: int, transport: Any):
         self.transports[node_id] = transport
 
     async def deliver_message(self, from_node: int, to_node: int, message):
+        # Log the message with relative monotonic timestamp
+        log_entry = {
+            "timestamp": time.monotonic() - self.start_monotonic,
+            "from": from_node,
+            "to": to_node,
+            "message": message,
+        }
+        self.logs.append(log_entry)
         if to_node in self.transports:
             return await self.transports[to_node].receive_message(
                 from_node, message
             )
+
+    def save_logs(self, filename: str):
+        with open(filename, "w") as f:
+            json.dump(self.logs, f, indent=2)
+        logger.info(f"Message logs saved to {filename}")
 
 
 class Transport(ABC):

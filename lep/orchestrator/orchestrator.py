@@ -29,7 +29,7 @@ class Orchestrator:
         )
         self.nodes = {}
         self.start_time = None
-        self.logs = []
+        self.start_monotonic = None
 
     def load_scenario(self):
         with open(self.scenario_file, "r") as f:
@@ -38,6 +38,7 @@ class Orchestrator:
     async def run_scenario(self):
         logger.info(f"Running scenario: {self.scenario['name']}")
         self.start_time = time.time()
+        self.start_monotonic = time.monotonic()
         cluster_size = self.scenario["cluster_size"]
         algorithm = self.scenario["algorithm"]
         transport_type = self.scenario.get("transport", "simulated")
@@ -45,7 +46,7 @@ class Orchestrator:
 
         # Start nodes
         if transport_type == "simulated":
-            dispatcher = MessageDispatcher()
+            dispatcher = MessageDispatcher(start_monotonic=self.start_monotonic)
             for node_id in all_nodes:
                 transport = SimulatedTransport(
                     node_id, all_nodes, self.network_controller, dispatcher
@@ -90,6 +91,56 @@ class Orchestrator:
         # Run for duration
         duration = self.scenario.get("duration", 30)
         await asyncio.sleep(duration)
+
+        # Collect metrics
+        metrics = self.collect_metrics()
+        self.save_results(metrics)
+
+        # Save message logs
+        if transport_type == "simulated":
+            dispatcher.save_logs(f"{self.output_dir}/messages.log")
+
+    async def replay_scenario(self, log_file: str):
+        logger.info(f"Replaying scenario from {log_file}")
+        with open(log_file, "r") as f:
+            logs = json.load(f)
+        if not logs:
+            logger.warning("No logs to replay")
+            return
+        min_ts = min(log["timestamp"] for log in logs)
+        logs.sort(key=lambda x: x["timestamp"])
+
+        # Load scenario for cluster setup
+        cluster_size = self.scenario["cluster_size"]
+        algorithm = self.scenario["algorithm"]
+        all_nodes = list(range(1, cluster_size + 1))
+
+        # Start nodes in simulated mode without network conditions
+        dispatcher = MessageDispatcher()
+        for node_id in all_nodes:
+            transport = SimulatedTransport(
+                node_id, all_nodes, self.network_controller, dispatcher
+            )
+            dispatcher.register_transport(node_id, transport)
+            if algorithm == "bully":
+                algo = BullyAlgorithm(node_id, all_nodes, transport)
+            elif algorithm == "raft":
+                algo = RaftAlgorithm(node_id, all_nodes, transport)
+            elif algorithm == "zab":
+                algo = ZabAlgorithm(node_id, all_nodes, transport)
+            else:
+                raise ValueError(f"Unknown algorithm: {algorithm}")
+            self.nodes[node_id] = algo
+            await algo.start()
+
+        # Replay messages
+        for log_entry in logs:
+            delay = log_entry["timestamp"] - min_ts
+            if delay > 0:
+                await asyncio.sleep(delay)
+            await dispatcher.deliver_message(
+                log_entry["from"], log_entry["to"], log_entry["message"]
+            )
 
         # Collect metrics
         metrics = self.collect_metrics()
