@@ -2,42 +2,42 @@
   "scenario": "network_partition",
   "algorithm": "bully",
   "cluster_size": 5,
-  "duration": 10.000837087631226,
+  "duration": 10.001691579818726,
   "nodes": {
     "1": {
       "node_id": 1,
       "role": "follower",
       "leader_id": 3,
       "term": 0,
-      "uptime": 10.000826195988338
+      "uptime": 10.001685714989435
     },
     "2": {
       "node_id": 2,
       "role": "follower",
       "leader_id": 3,
       "term": 0,
-      "uptime": 10.00078452602611
+      "uptime": 10.001645684998948
     },
     "3": {
       "node_id": 3,
       "role": "candidate",
       "leader_id": 3,
       "term": 0,
-      "uptime": 10.000766181008657
+      "uptime": 10.001630668004509
     },
     "4": {
       "node_id": 4,
       "role": "follower",
       "leader_id": 5,
       "term": 0,
-      "uptime": 10.000742308999179
+      "uptime": 10.001616066001588
     },
     "5": {
       "node_id": 5,
       "role": "leader",
       "leader_id": 5,
       "term": 0,
-      "uptime": 10.000727055012248
+      "uptime": 10.001601955998922
     }
   },
   "leaders": [

@@ -103,14 +103,14 @@ class BullyAlgorithm:
         logger.info(f"Node {self.node_id} became leader")
         # Send coordinator to all
         await self.transport.broadcast(
-            {"type": "coordinator", "leader": self.node_id}
+            {"type": "leader_announce", "leader_id": self.node_id}
         )
 
     async def heartbeat_sender(self):
         while True:
             if self.state == BullyState.LEADER:
                 await self.transport.broadcast(
-                    {"type": "heartbeat", "leader": self.node_id}
+                    {"type": "heartbeat", "leader_id": self.node_id}
                 )
             await asyncio.sleep(self.heartbeat_interval)
 

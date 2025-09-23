@@ -1,0 +1,47 @@
+{
+  "scenario": "restart_with_persistence",
+  "algorithm": "raft",
+  "cluster_size": 5,
+  "duration": 30.004505395889282,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "follower",
+      "leader_id": 2,
+      "term": 14,
+      "uptime": 15.000926051987335
+    },
+    "2": {
+      "node_id": 2,
+      "role": "leader",
+      "leader_id": 2,
+      "term": 14,
+      "uptime": 30.004312056989875
+    },
+    "3": {
+      "node_id": 3,
+      "role": "follower",
+      "leader_id": 2,
+      "term": 14,
+      "uptime": 30.004224749980494
+    },
+    "4": {
+      "node_id": 4,
+      "role": "follower",
+      "leader_id": 2,
+      "term": 14,
+      "uptime": 30.001985118025914
+    },
+    "5": {
+      "node_id": 5,
+      "role": "follower",
+      "leader_id": 2,
+      "term": 14,
+      "uptime": 30.001922126015415
+    }
+  },
+  "leaders": [
+    2
+  ],
+  "safety_violations": false
+}

@@ -14,7 +14,7 @@ message VoteResponse {
   bool vote_granted = 2;
 }
 
-message AppendEntries {
+message AppendEntriesRequest {
   int32 term = 1;
   int32 leader_id = 2;
   int32 prev_log_index = 3;
@@ -48,7 +48,7 @@ message ControlMessage {
 
 service LeaderElection {
   rpc RequestVote(VoteRequest) returns (VoteResponse);
-  rpc AppendEntries(AppendEntries) returns (VoteResponse);  // Reuse VoteResponse for simplicity
+  rpc AppendEntries(AppendEntriesRequest) returns (VoteResponse);  // Reuse VoteResponse for simplicity
   rpc SendHeartbeat(Heartbeat) returns (VoteResponse);
   rpc AnnounceLeader(LeaderAnnounce) returns (VoteResponse);
 }

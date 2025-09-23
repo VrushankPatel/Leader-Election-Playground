@@ -156,7 +156,7 @@ class GRPCTransport(Transport):
             if isinstance(pb_msg, pb.VoteRequest):
                 response = await stub.RequestVote(pb_msg)
                 return self._pb_to_dict(response)
-            elif isinstance(pb_msg, pb.AppendEntries):
+            elif isinstance(pb_msg, pb.AppendEntriesRequest):
                 response = await stub.AppendEntries(pb_msg)
                 return self._pb_to_dict(response)
             elif isinstance(pb_msg, pb.Heartbeat):
@@ -187,7 +187,7 @@ class GRPCTransport(Transport):
                 last_log_term=msg_dict.get("last_log_term", 0),
             )
         elif msg_type == "append_entries":
-            return pb.AppendEntries(
+            return pb.AppendEntriesRequest(
                 term=msg_dict["term"],
                 leader_id=msg_dict["leader_id"],
                 prev_log_index=msg_dict.get("prev_log_index", 0),

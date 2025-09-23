@@ -1,0 +1,47 @@
+{
+  "scenario": "packet_loss",
+  "algorithm": "raft",
+  "cluster_size": 5,
+  "duration": 10.000898599624634,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "leader",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.000882882013684
+    },
+    "2": {
+      "node_id": 2,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.000831703015137
+    },
+    "3": {
+      "node_id": 3,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.000805143004982
+    },
+    "4": {
+      "node_id": 4,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.000780325994128
+    },
+    "5": {
+      "node_id": 5,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.00075558599201
+    }
+  },
+  "leaders": [
+    1
+  ],
+  "safety_violations": false
+}

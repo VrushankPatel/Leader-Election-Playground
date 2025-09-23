@@ -1,0 +1,62 @@
+{
+  "scenario": "network_partition_7_raft",
+  "algorithm": "raft",
+  "cluster_size": 7,
+  "duration": 10.001404523849487,
+  "nodes": {
+    "1": {
+      "node_id": 1,
+      "role": "leader",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.001386240997817
+    },
+    "2": {
+      "node_id": 2,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.001339403010206
+    },
+    "3": {
+      "node_id": 3,
+      "role": "follower",
+      "leader_id": 1,
+      "term": 1,
+      "uptime": 10.001312136999331
+    },
+    "4": {
+      "node_id": 4,
+      "role": "leader",
+      "leader_id": 4,
+      "term": 2,
+      "uptime": 10.001286921993596
+    },
+    "5": {
+      "node_id": 5,
+      "role": "follower",
+      "leader_id": 4,
+      "term": 2,
+      "uptime": 10.001263146987185
+    },
+    "6": {
+      "node_id": 6,
+      "role": "follower",
+      "leader_id": 4,
+      "term": 2,
+      "uptime": 10.001240134006366
+    },
+    "7": {
+      "node_id": 7,
+      "role": "follower",
+      "leader_id": 4,
+      "term": 2,
+      "uptime": 10.001216934993863
+    }
+  },
+  "leaders": [
+    1,
+    4
+  ],
+  "safety_violations": true
+}
