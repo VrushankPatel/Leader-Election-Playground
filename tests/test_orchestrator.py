@@ -96,7 +96,7 @@ async def test_orchestrator_replay_scenario():
         "name": "test_replay",
         "algorithm": "bully",
         "cluster_size": 3,
-        "duration": 0.5,
+        "duration": 2.0,
         "seed": 42,
     }
     with tempfile.NamedTemporaryFile(

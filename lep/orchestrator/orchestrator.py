@@ -119,10 +119,7 @@ class Orchestrator:
         logger.info(f"Replaying scenario from {log_file}")
         with open(log_file, "r") as f:
             logs = json.load(f)
-        if not logs:
-            logger.warning("No logs to replay")
-            return
-        min_ts = min(log["timestamp"] for log in logs)
+        min_ts = min(log["timestamp"] for log in logs) if logs else 0
         logs.sort(key=lambda x: x["timestamp"])
 
         # Load scenario for cluster setup
@@ -148,14 +145,17 @@ class Orchestrator:
             self.nodes[node_id] = algo
             await algo.start()
 
-        # Replay messages
-        for log_entry in logs:
-            delay = log_entry["timestamp"] - min_ts
-            if delay > 0:
-                await asyncio.sleep(delay)
-            await dispatcher.deliver_message(
-                log_entry["from"], log_entry["to"], log_entry["message"]
-            )
+        if logs:
+            # Replay messages
+            for log_entry in logs:
+                delay = log_entry["timestamp"] - min_ts
+                if delay > 0:
+                    await asyncio.sleep(delay)
+                await dispatcher.deliver_message(
+                    log_entry["from"], log_entry["to"], log_entry["message"]
+                )
+        else:
+            logger.warning("No logs to replay")
 
         # Collect metrics
         metrics = self.collect_metrics()
