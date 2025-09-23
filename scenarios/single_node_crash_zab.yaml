@@ -1,0 +1,19 @@
+name: single_node_crash
+algorithm: zab
+cluster_size: 5
+duration: 10
+seed: 42
+transport: simulated
+network_conditions:
+  - type: partition
+    node1: 1
+    node2: 2
+  - type: partition
+    node1: 1
+    node2: 3
+  - type: partition
+    node1: 1
+    node2: 4
+  - type: partition
+    node1: 1
+    node2: 5
