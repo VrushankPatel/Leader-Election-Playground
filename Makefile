@@ -25,7 +25,7 @@ clean:
 	rm -rf build/ dist/ *.egg-info/
 
 run-scenario:
-	python -m lep.orchestrator run-scenario $(ARGS)
+	python3 -m lep.orchestrator run-scenario $(ARGS)
 
 web:
-	python web_server.py
+	python3 web_server.py
