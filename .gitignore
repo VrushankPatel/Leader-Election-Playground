@@ -131,3 +131,5 @@ node_*_voted_for.json
 
 # Test outputs
 test_output/
+test_results/
+test_run/
